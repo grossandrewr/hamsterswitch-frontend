@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
 
 const track = {
     name: "",
@@ -63,33 +65,83 @@ function WebPlayback(props) {
 
     return (
         <>
-            <div className="container">
-                <div className="main-wrapper">
-                    <img src={current_track.album.images[0].url}
-                        className="now-playing__cover" alt="" />
+            <Grid className="container">
+                <Grid 
+                    className="main-wrapper"
+                    container
+                    spacing={0}
+                    direction="column"
+                    alignItems="center"
+                    justifyContent="center"
+                >
+                    {
+                        current_track && 
+                        <img 
+                            src={current_track.album.images[0].url}
+                            className="now-playing__cover" alt="" 
+                            width="500px"
+                            height="500px"
+                        />
+                    }
 
-                    <div className="now-playing__side">
-                        <div className="now-playing__name">{
+                    <Grid 
+                        className="now-playing__side"
+                        item
+                        container
+                        direction="column"
+                        alignItems="center"
+                        justifyContent="center"
+                        style={{
+                            margin: "14px 0",
+                            fontSize: "20px",
+
+                        }}
+                    >
+                        <Grid className="now-playing__name">{
                             current_track.name
-                        }</div>
-
-                        <div className="now-playing__artist">{
+                        }</Grid>
+                        <Grid className="now-playing__artist">{
                             current_track.artists[0].name
-                        }</div>
-                    </div>
-                    <button className="btn-spotify" onClick={() => { player.previousTrack() }} >
-                        &lt;&lt;
-                    </button>
+                        }</Grid>
+                    </Grid>
+                    <Grid
+                        item
+                        container
+                        direction="row"
+                        alignItems="center"
+                        justifyContent="center"
+                    >
+                        <Button 
+                            className="btn-spotify" 
+                            onClick={() => { player.previousTrack() }} 
+                            variant="outlined"
+                        >
+                            &lt;&lt;
+                        </Button>
 
-                    <button className="btn-spotify" onClick={() => { player.togglePlay() }} >
-                        {is_paused ? "PLAY" : "PAUSE"}
-                    </button>
+                        <Button 
+                            className="btn-spotify" 
+                            onClick={() => { player.togglePlay() }} 
+                            variant="outlined"
+                            style={{
+                                margin: "0 10px",
+                                height: "60px",
+                                width: "150px"
+                            }}
+                        >
+                            {is_paused ? "PLAY" : "PAUSE"}
+                        </Button>
 
-                    <button className="btn-spotify" onClick={() => { player.nextTrack() }} >
-                        &gt;&gt;
-                    </button>
-                </div>
-            </div>
+                        <Button 
+                            className="btn-spotify" 
+                            onClick={() => { player.nextTrack() }} 
+                            variant="outlined"
+                        >
+                            &gt;&gt;
+                        </Button>
+                    </Grid>
+                </Grid>
+            </Grid>
         </>
     )
 }

@@ -2,12 +2,13 @@ import './App.css';
 import { 
   redirectToAuthCodeFlow,
   getAccessToken,
-  fetchProfile
+  fetchProfile,
  } from './auth.js'  
 import WebPlayback from './WebPlayback'
 import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
-
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 
 function App() {
   const clientId = process.env.REACT_APP_CLIENT_ID;
@@ -47,9 +48,23 @@ function App() {
   // }, [profile]) 
   
   return (
-    accessToken ? 
-      <WebPlayback token={accessToken} /> 
-      : <Button onClick={() => redirectToAuthCodeFlow(clientId)}>Login</Button>
+    <Grid
+      container
+      height="100vh"
+      spacing={0}
+      direction="column"
+      alignItems="center"
+      justifyContent="center"
+    >
+      {accessToken 
+        ? <>
+          <WebPlayback token={accessToken} />
+        </>
+        : <Button variant="outlined" onClick={() => redirectToAuthCodeFlow(clientId)}>
+            <Typography variant="h3">Login</Typography>
+          </Button>
+      }
+    </Grid>
   );
 }
 
