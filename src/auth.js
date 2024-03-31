@@ -8,7 +8,7 @@ export async function redirectToAuthCodeFlow(clientId) {
     params.append("client_id", clientId);
     params.append("response_type", "code");
     params.append("redirect_uri", "http://localhost:3000/callback");
-    params.append("scope", "streaming user-read-private user-read-email");
+    params.append("scope", "streaming user-read-private user-read-email user-read-currently-playing user-read-playback-state user-modify-playback-state");
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
 
@@ -59,4 +59,11 @@ export async function fetchProfile(token) {
         method: "GET", headers: { Authorization: `Bearer ${token}` }
     });
     return await result.json();
+}
+
+export async function addToQueue(token, songUri) {
+    const result = await fetch(`https://api.spotify.com/v1/me/player/queue?uri=${songUri}`, {
+        method: "POST", headers: { Authorization: `Bearer ${token}` }
+    });
+    return await result;
 }

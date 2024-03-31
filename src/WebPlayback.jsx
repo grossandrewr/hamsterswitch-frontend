@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
+import { addToQueue } from './auth.js'
 
 const track = {
     name: "",
@@ -62,6 +63,11 @@ function WebPlayback(props) {
             player.connect();
         };
     }, []);
+
+    const handleAddToQueue = async () => {
+        await addToQueue(props.token, "spotify:track:5xYR2G6YOEzX2X9asFUrOE");
+        player.nextTrack();
+    }
 
     return (
         <>
@@ -140,6 +146,7 @@ function WebPlayback(props) {
                             &gt;&gt;
                         </Button>
                     </Grid>
+                    <Button onClick={handleAddToQueue}>Add to queue</Button>
                 </Grid>
             </Grid>
         </>
