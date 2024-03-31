@@ -4,6 +4,7 @@ import {
   getAccessToken,
   fetchProfile
  } from './auth.js'  
+import WebPlayback from './WebPlayback'
 import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 
@@ -35,35 +36,20 @@ function App() {
     }
   }, [clientId, code]);
 
-  useEffect(() => {
-    if (!profile) return;
-    if (profile.images[0]) {
-      const profileImage = new Image(100, 100);
-      profileImage.src = profile.images[0].url;
-      document.getElementById("avatar").appendChild(profileImage);
-      document.getElementById("imgUrl").innerText = profile.images[0].url;
-    }
-  }, [profile]) 
+  // useEffect(() => {
+  //   if (!profile) return;
+  //   if (profile.images[0]) {
+  //     const profileImage = new Image(100, 100);
+  //     profileImage.src = profile.images[0].url;
+  //     document.getElementById("avatar").appendChild(profileImage);
+  //     document.getElementById("imgUrl").innerText = profile.images[0].url;
+  //   }
+  // }, [profile]) 
   
   return (
-    profile && profile.email ? 
-      <>
-        <h1>Display your Spotify profile data</h1>
-        <section id="profile">
-        <h2>Logged in as <span id="displayName"></span></h2>
-        <span id="avatar"></span>
-        <ul>
-            <li>User ID: <span id="id">{profile.id}</span></li>
-            <li>Email: <span id="email">{profile.email}</span></li>
-            <li>Spotify URI: <a id="uri" href={profile.external_urls.spotify}></a></li>
-            <li>Link: <a id="url" href={profile.href}>{profile.href}</a></li>
-            <li>Profile Image: <span id="imgUrl"></span></li>
-        </ul>
-        </section>
-      </>
+    accessToken ? 
+      <WebPlayback token={accessToken} /> 
       : <Button onClick={() => redirectToAuthCodeFlow(clientId)}>Login</Button>
-    
-
   );
 }
 
