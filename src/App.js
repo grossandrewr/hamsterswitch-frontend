@@ -5,6 +5,7 @@ import {
   fetchProfile
  } from './auth.js'  
 import React, { useState, useEffect } from 'react';
+import Button from '@mui/material/Button';
 
 
 function App() {
@@ -29,8 +30,6 @@ function App() {
 
     if (profile && profile.email) {
       return;
-    } else if (!code) {
-      redirectToAuthCodeFlow(clientId);
     } else {
       fetchData();
     }
@@ -62,7 +61,7 @@ function App() {
         </ul>
         </section>
       </>
-    : <h1>Loading...</h1>
+      : <Button onClick={() => redirectToAuthCodeFlow(clientId)}>Login</Button>
     
 
   );
