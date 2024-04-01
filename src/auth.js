@@ -67,3 +67,11 @@ export async function addToQueue(token, songUri) {
     });
     return await result;
 }
+
+export async function getAlbumTracks(token, albumUri) {
+    const result = await fetch(`https://api.spotify.com/v1/albums/${albumUri}`, {
+        method: "GET", headers: { Authorization: `Bearer ${token}` }
+    });
+    const resultJson = await result.json()
+    return resultJson.tracks.items.map(track => track.uri)
+}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
-import { addToQueue } from './auth.js'
+import { addToQueue, getAlbumTracks } from './auth.js'
 
 const track = {
     name: "",
@@ -64,8 +64,11 @@ function WebPlayback(props) {
         };
     }, []);
 
-    const handleAddToQueue = async () => {
-        await addToQueue(props.token, "spotify:track:5xYR2G6YOEzX2X9asFUrOE");
+    const handleAddAlbumToQueue = async (albumId) => {
+        const trackUris = await getAlbumTracks(props.token, albumId)
+        for (let i = 0; i<trackUris.length; i++) {
+            await addToQueue(props.token, trackUris[i]);
+        }
         player.nextTrack();
     }
 
@@ -85,8 +88,8 @@ function WebPlayback(props) {
                         <img 
                             src={current_track.album.images[0].url}
                             className="now-playing__cover" alt="" 
-                            width="500px"
-                            height="500px"
+                            width="400px"
+                            height="400px"
                         />
                     }
 
@@ -121,6 +124,9 @@ function WebPlayback(props) {
                             className="btn-spotify" 
                             onClick={() => { player.previousTrack() }} 
                             variant="outlined"
+                            style={{
+                                borderRadius: 8
+                            }}
                         >
                             &lt;&lt;
                         </Button>
@@ -130,9 +136,11 @@ function WebPlayback(props) {
                             onClick={() => { player.togglePlay() }} 
                             variant="outlined"
                             style={{
-                                margin: "0 10px",
+                                margin: "0 20px",
                                 height: "60px",
-                                width: "150px"
+                                width: "150px",
+                                borderRadius: 8
+                                
                             }}
                         >
                             {is_paused ? "PLAY" : "PAUSE"}
@@ -142,11 +150,14 @@ function WebPlayback(props) {
                             className="btn-spotify" 
                             onClick={() => { player.nextTrack() }} 
                             variant="outlined"
+                            style={{
+                                borderRadius: 8
+                            }}
                         >
                             &gt;&gt;
                         </Button>
                     </Grid>
-                    <Button onClick={handleAddToQueue}>Add to queue</Button>
+                    <Button onClick={() => handleAddAlbumToQueue("7w5rD7XcQufZshgBmTjDIJ")}>Add album to queue</Button>
                 </Grid>
             </Grid>
         </>
