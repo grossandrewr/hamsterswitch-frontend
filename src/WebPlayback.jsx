@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
-import { addToQueue, getAlbumTracks } from './auth.js'
+import { addToQueue, getAlbumTracks, getAlbumInfo, playAlbum } from './auth.js'
 
 const track = {
     name: "",
@@ -20,6 +20,7 @@ function WebPlayback(props) {
     const [is_paused, setPaused] = useState(false);
     const [is_active, setActive] = useState(false);
     const [current_track, setTrack] = useState(track);
+    const [albumResults, setAlbumResults] = useState([]);
 
     useEffect(() => {
         if (!document || !document.body) {
@@ -63,18 +64,46 @@ function WebPlayback(props) {
             player.connect();
         };
     }, []);
-
+    
     const handleAddAlbumToQueue = async (albumId) => {
-        const trackUris = await getAlbumTracks(props.token, albumId)
-        for (let i = 0; i<trackUris.length; i++) {
-            await addToQueue(props.token, trackUris[i]);
+        await playAlbum(props.token, `spotify:album:${albumId}`)
+    }
+
+    const handleSearchAlbums = async (albumUris) => {
+        const constantUris = [
+            '2AlPRfYeskAMxhJS00xjeP',
+            '0ETFjACtuP2ADo6LFhL6HN',
+            '1klALx0u4AavZNEvC4LrTL',
+            '6uO5B6km2Dco28tOBmZtSU',
+        ]
+        const results = []
+        for (let i = 0; i<constantUris.length; i++) {
+            const albumResult = await getAlbumInfo(props.token, constantUris[i]);
+            results.push(albumResult)
         }
-        player.nextTrack();
+        setAlbumResults(results)
+    }
+
+    const getAlbumGrid = () => {
+        if (!albumResults.length) return null
+        return albumResults.map(album => 
+            <Button onClick={() => handleAddAlbumToQueue(album.id)}>
+                <img
+                    src={album.images[0].url}
+                    className="now-playing__cover" alt=""
+                    width="300px"
+                    height="300px"
+                />
+            </Button>
+        )
     }
 
     return (
         <>
             <Grid className="container">
+                <Grid>
+                    {getAlbumGrid()}
+                </Grid>
                 <Grid 
                     className="main-wrapper"
                     container
@@ -158,6 +187,7 @@ function WebPlayback(props) {
                         </Button>
                     </Grid>
                     <Button onClick={() => handleAddAlbumToQueue("7w5rD7XcQufZshgBmTjDIJ")}>Add album to queue</Button>
+                    <Button onClick={() => handleSearchAlbums("")}>Search albums</Button>
                 </Grid>
             </Grid>
         </>

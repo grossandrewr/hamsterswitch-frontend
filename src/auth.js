@@ -61,17 +61,39 @@ export async function fetchProfile(token) {
     return await result.json();
 }
 
-export async function addToQueue(token, songUri) {
-    const result = await fetch(`https://api.spotify.com/v1/me/player/queue?uri=${songUri}`, {
-        method: "POST", headers: { Authorization: `Bearer ${token}` }
+export async function getAlbumInfo(token, albumUri) {
+    const result = await fetch(`https://api.spotify.com/v1/albums/${albumUri}`, {
+        method: "GET", headers: { Authorization: `Bearer ${token}` }
     });
-    return await result;
+    const resultJson = await result.json()
+    return resultJson;
 }
+
 
 export async function getAlbumTracks(token, albumUri) {
     const result = await fetch(`https://api.spotify.com/v1/albums/${albumUri}`, {
         method: "GET", headers: { Authorization: `Bearer ${token}` }
     });
     const resultJson = await result.json()
-    return resultJson.tracks.items.map(track => track.uri)
+    return {
+        firstTrackName: resultJson.tracks.items[0].name,
+        trackUris: resultJson.tracks.items.map(track => track.uri)
+    }
+}
+
+export async function searchAlbums(token, albumUriArray) {
+    const paramString = albumUriArray.join('%')
+    const result = await fetch(`https://api.spotify.com/v1/albums?ids=${paramString}`, {
+        method: "GET", headers: { Authorization: `Bearer ${token}` }
+    });
+    const resultJson = await result.json();
+    return resultJson;
+}
+
+export async function playAlbum(token, albumUri) {
+    const result = await fetch(`https://api.spotify.com/v1/me/player/play`, {
+        method: "PUT", 
+        headers: { Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ 'context_uri': albumUri })
+    });
 }

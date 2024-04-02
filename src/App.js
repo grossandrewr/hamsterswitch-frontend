@@ -36,16 +36,6 @@ function App() {
       fetchData();
     }
   }, [clientId, code]);
-
-  // useEffect(() => {
-  //   if (!profile) return;
-  //   if (profile.images[0]) {
-  //     const profileImage = new Image(100, 100);
-  //     profileImage.src = profile.images[0].url;
-  //     document.getElementById("avatar").appendChild(profileImage);
-  //     document.getElementById("imgUrl").innerText = profile.images[0].url;
-  //   }
-  // }, [profile]) 
   
   return (
     <Grid
