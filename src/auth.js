@@ -69,18 +69,6 @@ export async function getAlbumInfo(token, albumUri) {
     return resultJson;
 }
 
-
-export async function getAlbumTracks(token, albumUri) {
-    const result = await fetch(`https://api.spotify.com/v1/albums/${albumUri}`, {
-        method: "GET", headers: { Authorization: `Bearer ${token}` }
-    });
-    const resultJson = await result.json()
-    return {
-        firstTrackName: resultJson.tracks.items[0].name,
-        trackUris: resultJson.tracks.items.map(track => track.uri)
-    }
-}
-
 export async function searchAlbums(token, albumUriArray) {
     const paramString = albumUriArray.join('%')
     const result = await fetch(`https://api.spotify.com/v1/albums?ids=${paramString}`, {
@@ -91,7 +79,7 @@ export async function searchAlbums(token, albumUriArray) {
 }
 
 export async function playAlbum(token, albumUri) {
-    const result = await fetch(`https://api.spotify.com/v1/me/player/play`, {
+    await fetch(`https://api.spotify.com/v1/me/player/play`, {
         method: "PUT", 
         headers: { Authorization: `Bearer ${token}` },
         body: JSON.stringify({ 'context_uri': albumUri })

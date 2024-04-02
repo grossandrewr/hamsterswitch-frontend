@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
-import { addToQueue, getAlbumTracks, getAlbumInfo, playAlbum } from './auth.js'
+import { getAlbumInfo, playAlbum } from './auth.js'
 
 const track = {
     name: "",
