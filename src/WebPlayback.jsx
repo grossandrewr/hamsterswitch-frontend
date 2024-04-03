@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
-import { getAlbumInfo, playAlbum } from './auth.js'
+import { getAlbumInfo, playAlbum, searchForAlbum } from './auth.js'
 
 const track = {
     name: "",
@@ -69,16 +69,18 @@ function WebPlayback(props) {
         await playAlbum(props.token, `spotify:album:${albumId}`)
     }
 
-    const handleSearchAlbums = async (albumUris) => {
-        const constantUris = [
-            '2AlPRfYeskAMxhJS00xjeP',
-            '0ETFjACtuP2ADo6LFhL6HN',
-            '1klALx0u4AavZNEvC4LrTL',
-            '6uO5B6km2Dco28tOBmZtSU',
+    const handleSearchAlbums = async (albumsToFind) => {
+        const constantAlbumsToFind = [
+            ["Rubber Soul", "The Beatles"],
+            ["In Rainbows", "Radiohead"],
+            ["Cowboy Carter", "Beyonce"],
+            ["Dark Side of the Moon", "Pink Floyd"]
         ]
         const results = []
-        for (let i = 0; i<constantUris.length; i++) {
-            const albumResult = await getAlbumInfo(props.token, constantUris[i]);
+        for (let i = 0; i < constantAlbumsToFind.length; i++) {
+            const albumName = constantAlbumsToFind[i][0];
+            const artistName = constantAlbumsToFind[i][1];
+            const albumResult = await searchForAlbum(props.token, albumName, artistName);
             results.push(albumResult)
         }
         setAlbumResults(results)
