@@ -85,3 +85,14 @@ export async function playAlbum(token, albumUri) {
         body: JSON.stringify({ 'context_uri': albumUri })
     });
 }
+
+export async function searchForAlbum(token, albumName, artistName) {
+    const searchString = `q=${albumName.replace(" ", "+")}+${artistName.replace(" ", "+")}&type=album` 
+    const result = await fetch(`https://api.spotify.com/v1/search?${searchString}`, {
+        method: "GET", 
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    const resultJson = await result.json()
+    const albumResults = resultJson.albums?.items
+    return albumResults.length && albumResults[0]
+}
