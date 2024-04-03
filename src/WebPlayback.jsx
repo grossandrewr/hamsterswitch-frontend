@@ -21,6 +21,7 @@ function WebPlayback(props) {
     const [is_active, setActive] = useState(false);
     const [current_track, setTrack] = useState(track);
     const [albumResults, setAlbumResults] = useState([]);
+    const [currentScreen, setCurrentScreen] = useState(0);
 
     useEffect(() => {
         if (!document || !document.body) {
@@ -65,8 +66,9 @@ function WebPlayback(props) {
         };
     }, []);
     
-    const handleAddAlbumToQueue = async (albumId) => {
+    const handlePlayAlbum = async (albumId) => {
         await playAlbum(props.token, `spotify:album:${albumId}`)
+        setCurrentScreen(0)
     }
 
     const handleSearchAlbums = async (albumsToFind) => {
@@ -84,12 +86,13 @@ function WebPlayback(props) {
             results.push(albumResult)
         }
         setAlbumResults(results)
+        setCurrentScreen(1)
     }
 
     const getAlbumGrid = () => {
         if (!albumResults.length) return null
         return albumResults.map(album => 
-            <Button onClick={() => handleAddAlbumToQueue(album.id)}>
+            <Button onClick={() => handlePlayAlbum(album.id)}>
                 <img
                     src={album.images[0].url}
                     className="now-playing__cover" alt=""
@@ -103,94 +106,95 @@ function WebPlayback(props) {
     return (
         <>
             <Grid className="container">
-                <Grid>
-                    {getAlbumGrid()}
-                </Grid>
-                <Grid 
-                    className="main-wrapper"
-                    container
-                    spacing={0}
-                    direction="column"
-                    alignItems="center"
-                    justifyContent="center"
-                >
-                    {
-                        current_track && 
-                        <img 
-                            src={current_track.album.images[0].url}
-                            className="now-playing__cover" alt="" 
-                            width="400px"
-                            height="400px"
-                        />
-                    }
-
-                    <Grid 
-                        className="now-playing__side"
-                        item
+                { currentScreen == 1 ? 
+                    <Grid style={{maxWidth: "750px"}}>
+                        {getAlbumGrid()}
+                    </Grid>
+                    : <Grid 
+                        className="main-wrapper"
                         container
+                        spacing={0}
                         direction="column"
                         alignItems="center"
                         justifyContent="center"
-                        style={{
-                            margin: "14px 0",
-                            fontSize: "20px",
-
-                        }}
                     >
-                        <Grid className="now-playing__name">{
-                            current_track.name
-                        }</Grid>
-                        <Grid className="now-playing__artist">{
-                            current_track.artists[0].name
-                        }</Grid>
-                    </Grid>
-                    <Grid
-                        item
-                        container
-                        direction="row"
-                        alignItems="center"
-                        justifyContent="center"
-                    >
-                        <Button 
-                            className="btn-spotify" 
-                            onClick={() => { player.previousTrack() }} 
-                            variant="outlined"
-                            style={{
-                                borderRadius: 8
-                            }}
-                        >
-                            &lt;&lt;
-                        </Button>
+                        {
+                            current_track && 
+                            <img 
+                                src={current_track.album.images[0].url}
+                                className="now-playing__cover" alt="" 
+                                width="400px"
+                                height="400px"
+                            />
+                        }
 
-                        <Button 
-                            className="btn-spotify" 
-                            onClick={() => { player.togglePlay() }} 
-                            variant="outlined"
+                        <Grid 
+                            className="now-playing__side"
+                            item
+                            container
+                            direction="column"
+                            alignItems="center"
+                            justifyContent="center"
                             style={{
-                                margin: "0 20px",
-                                height: "60px",
-                                width: "150px",
-                                borderRadius: 8
-                                
-                            }}
-                        >
-                            {is_paused ? "PLAY" : "PAUSE"}
-                        </Button>
+                                margin: "14px 0",
+                                fontSize: "20px",
 
-                        <Button 
-                            className="btn-spotify" 
-                            onClick={() => { player.nextTrack() }} 
-                            variant="outlined"
-                            style={{
-                                borderRadius: 8
                             }}
                         >
-                            &gt;&gt;
-                        </Button>
+                            <Grid className="now-playing__name">{
+                                current_track.name
+                            }</Grid>
+                            <Grid className="now-playing__artist">{
+                                current_track.artists[0].name
+                            }</Grid>
+                        </Grid>
+                        <Grid
+                            item
+                            container
+                            direction="row"
+                            alignItems="center"
+                            justifyContent="center"
+                        >
+                            <Button 
+                                className="btn-spotify" 
+                                onClick={() => { player.previousTrack() }} 
+                                variant="outlined"
+                                style={{
+                                    borderRadius: 8
+                                }}
+                            >
+                                &lt;&lt;
+                            </Button>
+
+                            <Button 
+                                className="btn-spotify" 
+                                onClick={() => { player.togglePlay() }} 
+                                variant="outlined"
+                                style={{
+                                    margin: "0 20px",
+                                    height: "60px",
+                                    width: "150px",
+                                    borderRadius: 8
+                                    
+                                }}
+                            >
+                                {is_paused ? "PLAY" : "PAUSE"}
+                            </Button>
+
+                            <Button 
+                                className="btn-spotify" 
+                                onClick={() => { player.nextTrack() }} 
+                                variant="outlined"
+                                style={{
+                                    borderRadius: 8
+                                }}
+                            >
+                                &gt;&gt;
+                            </Button>
+                        </Grid>
+                        <Button onClick={() => handleSearchAlbums("")}>Search albums</Button>
                     </Grid>
-                    <Button onClick={() => handleAddAlbumToQueue("7w5rD7XcQufZshgBmTjDIJ")}>Add album to queue</Button>
-                    <Button onClick={() => handleSearchAlbums("")}>Search albums</Button>
-                </Grid>
+                }
             </Grid>
         </>
     )
