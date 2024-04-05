@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import { getAlbumInfo, playAlbum, searchForAlbum } from './auth.js'
+import { makeGPTRequest } from './openai.js';
 
 const track = {
     name: "",
@@ -72,22 +73,24 @@ function WebPlayback(props) {
     }
 
     const handleSearchAlbums = async (albumsToFind) => {
-        const constantAlbumsToFind = [
-            ["Rubber Soul", "The Beatles"],
-            ["In Rainbows", "Radiohead"],
-            ["Cowboy Carter", "Beyonce"],
-            ["Dark Side of the Moon", "Pink Floyd"]
-        ]
+        const constantAlbumsToFind = await handleGptRequest()
         const results = []
-        for (let i = 0; i < constantAlbumsToFind.length; i++) {
-            const albumName = constantAlbumsToFind[i][0];
-            const artistName = constantAlbumsToFind[i][1];
+        for (let i = 0; i < 4; i++) {
+            const albumName = constantAlbumsToFind[i]['album'];
+            const artistName = constantAlbumsToFind[i]['artist'];
             const albumResult = await searchForAlbum(props.token, albumName, artistName);
             results.push(albumResult)
         }
         setAlbumResults(results)
         setCurrentScreen(1)
     }
+
+    const handleGptRequest = async () => {
+        const gptResult = await makeGPTRequest();
+        const gptAlbums = gptResult?.message?.content;
+        return JSON.parse(gptAlbums);
+    }
+
 
     const getAlbumGrid = () => {
         if (!albumResults.length) return null
@@ -98,6 +101,7 @@ function WebPlayback(props) {
                     className="now-playing__cover" alt=""
                     width="300px"
                     height="300px"
+                    style={{ borderRadius: "5px" }}
                 />
             </Button>
         )
@@ -125,6 +129,8 @@ function WebPlayback(props) {
                                 className="now-playing__cover" alt="" 
                                 width="400px"
                                 height="400px"
+                                style={{ borderRadius: "5px" }}
+
                             />
                         }
 
