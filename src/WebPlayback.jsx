@@ -3,6 +3,7 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import { getAlbumInfo, playAlbum, searchForAlbum } from './auth.js'
 import { makeGPTRequest } from './openai.js';
+import TextField from '@mui/material/TextField';
 
 const track = {
     name: "",
@@ -23,6 +24,7 @@ function WebPlayback(props) {
     const [current_track, setTrack] = useState(track);
     const [albumResults, setAlbumResults] = useState([]);
     const [currentScreen, setCurrentScreen] = useState(0);
+    const [searchString, setSearchString] = useState("")
 
     useEffect(() => {
         if (!document || !document.body) {
@@ -72,8 +74,9 @@ function WebPlayback(props) {
         setCurrentScreen(0)
     }
 
-    const handleSearchAlbums = async (albumsToFind) => {
-        const constantAlbumsToFind = await handleGptRequest()
+    const handleSearchAlbums = async (searchString) => {
+        const constantAlbumsToFind = await handleGptRequest(searchString)
+        
         const results = []
         for (let i = 0; i < 4; i++) {
             const albumName = constantAlbumsToFind[i]['album'];
@@ -83,10 +86,11 @@ function WebPlayback(props) {
         }
         setAlbumResults(results)
         setCurrentScreen(1)
+        setSearchString("")
     }
 
-    const handleGptRequest = async () => {
-        const gptResult = await makeGPTRequest();
+    const handleGptRequest = async (searchString) => {
+        const gptResult = await makeGPTRequest(searchString);
         const gptAlbums = gptResult?.message?.content;
         return JSON.parse(gptAlbums);
     }
@@ -101,18 +105,47 @@ function WebPlayback(props) {
                     className="now-playing__cover" alt=""
                     width="300px"
                     height="300px"
-                    style={{ borderRadius: "5px" }}
+                    style={{ 
+                        borderRadius: "5px",
+                        boxShadow: "0px 0px 15px rgba(0, 0, 0, 0.4)"
+                    }}
                 />
             </Button>
         )
+    }
+
+    const handleChangeText = e => {
+        setSearchString(e.target.value);
     }
 
     return (
         <>
             <Grid className="container">
                 { currentScreen == 1 ? 
-                    <Grid style={{maxWidth: "750px"}}>
-                        {getAlbumGrid()}
+                    <Grid container direction="column" alignItems="center" justifyContent="center">
+                        <Grid container direction="column" alignItems="center" justifyContent="center">
+                            <TextField
+                                id="outlined-controlled"
+                                label="Controlled"
+                                value={searchString}
+                                onChange={handleChangeText}
+                                style={{minWidth: "400px"}}
+                            />
+                            <Button 
+                                variant="outlined" 
+                                style={{
+                                    maxWidth: "100px", 
+                                    borderRadius: 100,
+                                    margin: "6px 0"
+                                }}
+                                onClick={() => handleSearchAlbums(searchString)}
+                            >
+                                OK
+                            </Button>
+                        </Grid>
+                        <Grid container alignItems="center" justifyContent="center" style={{maxWidth: "750px"}}>
+                            {getAlbumGrid()}
+                        </Grid>
                     </Grid>
                     : <Grid 
                         className="main-wrapper"
@@ -129,7 +162,10 @@ function WebPlayback(props) {
                                 className="now-playing__cover" alt="" 
                                 width="400px"
                                 height="400px"
-                                style={{ borderRadius: "5px" }}
+                                style={{ 
+                                    borderRadius: "5px",
+                                    boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.2)"
+                                }}
 
                             />
                         }
@@ -166,7 +202,7 @@ function WebPlayback(props) {
                                 onClick={() => { player.previousTrack() }} 
                                 variant="outlined"
                                 style={{
-                                    borderRadius: 8
+                                    borderRadius: 100
                                 }}
                             >
                                 &lt;&lt;
@@ -180,7 +216,7 @@ function WebPlayback(props) {
                                     margin: "0 20px",
                                     height: "60px",
                                     width: "150px",
-                                    borderRadius: 8
+                                    borderRadius: 100,
                                     
                                 }}
                             >
@@ -192,13 +228,13 @@ function WebPlayback(props) {
                                 onClick={() => { player.nextTrack() }} 
                                 variant="outlined"
                                 style={{
-                                    borderRadius: 8
+                                    borderRadius: 100,
                                 }}
                             >
                                 &gt;&gt;
                             </Button>
                         </Grid>
-                        <Button onClick={() => handleSearchAlbums("")}>Search albums</Button>
+                        <Button onClick={() => handleSearchAlbums("the beatles")}>Search albums</Button>
                     </Grid>
                 }
             </Grid>
