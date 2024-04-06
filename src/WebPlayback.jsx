@@ -23,7 +23,7 @@ function WebPlayback(props) {
     const [is_active, setActive] = useState(false);
     const [current_track, setTrack] = useState(track);
     const [albumResults, setAlbumResults] = useState([]);
-    const [currentScreen, setCurrentScreen] = useState(0);
+    const [currentScreen, setCurrentScreen] = useState(1);
     const [searchString, setSearchString] = useState("")
 
     useEffect(() => {
@@ -146,6 +146,20 @@ function WebPlayback(props) {
                         <Grid container alignItems="center" justifyContent="center" style={{maxWidth: "750px"}}>
                             {getAlbumGrid()}
                         </Grid>
+                        {
+                            albumResults.length 
+                            ? <Button
+                                onClick={() => setCurrentScreen(0)}
+                                variant="outlined"
+                                style={{
+                                    borderRadius: 100,
+                                    marginTop: "25px"
+                                }}
+                            >
+                                Now Playing
+                            </Button>
+                            : <></>
+                        }
                     </Grid>
                     : <Grid 
                         className="main-wrapper"
@@ -234,7 +248,17 @@ function WebPlayback(props) {
                                 &gt;&gt;
                             </Button>
                         </Grid>
-                        <Button onClick={() => handleSearchAlbums("the beatles")}>Search albums</Button>
+                        <Button
+                            className="btn-spotify"
+                            onClick={() => setCurrentScreen(1)}
+                            variant="outlined"
+                            style={{
+                                borderRadius: 100,
+                                marginTop: "25px"
+                            }}
+                        >
+                            Find Albums
+                        </Button>
                     </Grid>
                 }
             </Grid>
