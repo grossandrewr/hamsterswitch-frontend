@@ -8,7 +8,7 @@ export async function redirectToAuthCodeFlow(clientId) {
     params.append("client_id", clientId);
     params.append("response_type", "code");
     params.append("redirect_uri", "http://localhost:3000/callback");
-    params.append("scope", "streaming user-read-private user-read-email user-read-currently-playing user-read-playback-state user-modify-playback-state");
+    params.append("scope", "streaming user-read-private user-read-email user-read-currently-playing user-read-playback-state user-modify-playback-state app-remote-control");
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
 
@@ -96,3 +96,21 @@ export async function searchForAlbum(token, albumName, artistName) {
     const albumResults = resultJson.albums?.items
     return albumResults.length && albumResults[0]
 }
+
+export async function getDevices(token) {
+    const result = await fetch(`https://api.spotify.com/v1/me/player/devices`, {
+        method: "GET", 
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    const resultJson = await result.json()
+    return resultJson
+}
+
+export async function transferPlayback(token, deviceId) {
+    await fetch(`https://api.spotify.com/v1/me/player`, {
+        method: "PUT",
+        headers: { Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ 'device_ids': [deviceId] })
+    });
+}
+

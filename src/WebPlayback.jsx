@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
-import { getAlbumInfo, playAlbum, searchForAlbum } from './auth.js'
+import { playAlbum, searchForAlbum, getDevices, transferPlayback } from './auth.js'
 import { makeGPTRequest } from './openai.js';
 import TextField from '@mui/material/TextField';
 
@@ -25,7 +25,8 @@ function WebPlayback(props) {
     const [albumResults, setAlbumResults] = useState([]);
     const [currentScreen, setCurrentScreen] = useState(1);
     const [searchString, setSearchString] = useState("")
-
+    const [deviceId, setDeviceId] = useState("")
+    
     useEffect(() => {
         if (!document || !document.body) {
             return;
@@ -69,6 +70,20 @@ function WebPlayback(props) {
         };
     }, []);
     
+    useEffect(() => {
+        const handleTransferPlayback = async () => {
+            const { devices } = await getDevices(props.token)
+            for (let i=0; i < devices.length; i++) {
+                let device = devices[i]
+                if (device.name == "Web Playback SDK") {
+                    setDeviceId(device.id)
+                    transferPlayback(props.token, device.id)
+                }
+            }
+        }
+        setTimeout(handleTransferPlayback, 1000)
+    }, [])
+
     const handlePlayAlbum = async (albumId) => {
         await playAlbum(props.token, `spotify:album:${albumId}`)
         setCurrentScreen(0)
