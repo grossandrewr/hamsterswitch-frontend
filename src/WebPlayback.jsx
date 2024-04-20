@@ -4,6 +4,9 @@ import Button from '@mui/material/Button';
 import { playAlbum, searchForAlbum, getDevices, transferPlayback } from './auth.js'
 import { makeGPTRequest } from './openai.js';
 import TextField from '@mui/material/TextField';
+import { jelly } from 'ldrs'
+
+jelly.register()
 
 const track = {
     name: "",
@@ -26,6 +29,7 @@ function WebPlayback(props) {
     const [currentScreen, setCurrentScreen] = useState(1);
     const [searchString, setSearchString] = useState("")
     const [deviceId, setDeviceId] = useState("")
+    const [isLoading, setIsLoading] = useState(false)
     
     useEffect(() => {
         if (!document || !document.body) {
@@ -90,8 +94,9 @@ function WebPlayback(props) {
     }
 
     const handleSearchAlbums = async (searchString) => {
+        setIsLoading(true)
         const constantAlbumsToFind = await handleGptRequest(searchString)
-        
+
         const results = []
         for (let i = 0; i < 4; i++) {
             const albumName = constantAlbumsToFind[i]['album'];
@@ -102,6 +107,7 @@ function WebPlayback(props) {
         setAlbumResults(results)
         setCurrentScreen(1)
         setSearchString("")
+        setIsLoading(false)
     }
 
     const handleGptRequest = async (searchString) => {
@@ -109,7 +115,6 @@ function WebPlayback(props) {
         const gptAlbums = gptResult?.message?.content;
         return JSON.parse(gptAlbums);
     }
-
 
     const getAlbumGrid = () => {
         if (!albumResults.length) return null
@@ -135,31 +140,52 @@ function WebPlayback(props) {
 
     return (
         <>
-            <Grid className="container">
+            <Grid className="container" style={{marginTop: "-100px"}}>
                 { currentScreen == 1 ? 
                     <Grid container direction="column" alignItems="center" justifyContent="center">
-                        <Grid container direction="column" alignItems="center" justifyContent="center">
+                        
+                        <Grid container alignItems="center" justifyContent="center" style={{ minHeight: "740px" }}>
+                            {
+                                !!isLoading 
+                                ? <Grid container alignItems="center" justifyContent="center">
+                                    <l-jelly
+                                    size="220"
+                                    speed="2.0"
+                                    color="black"
+                                    ></l-jelly>
+                                </Grid> 
+                                : <Grid direction="row" container alignItems="center" justifyContent="center" style={{height: "624 px", maxWidth: "750px"}}>
+                                    {getAlbumGrid()}
+                                </Grid>
+                            }
+                        </Grid>
+                        <Grid container direction="row" alignItems="center" justifyContent="center">
                             <TextField
                                 id="outlined-controlled"
-                                label="Controlled"
+                                label=""
                                 value={searchString}
                                 onChange={handleChangeText}
-                                style={{minWidth: "400px"}}
+                                style={{ minWidth: "400px" }}
+                                inputProps={{
+                                    style: {
+                                        height: "70px",
+                                        padding: '0 14px',
+                                        fontSize: '23px',
+                                        color: "#1976d2",
+                                    },
+                                }}
                             />
-                            <Button 
-                                variant="outlined" 
+                            <Button
+                                variant="outlined"
                                 style={{
-                                    maxWidth: "100px", 
+                                    maxWidth: "100px",
                                     borderRadius: 100,
-                                    margin: "6px 0"
+                                    margin: "6px 20px"
                                 }}
                                 onClick={() => handleSearchAlbums(searchString)}
                             >
                                 OK
                             </Button>
-                        </Grid>
-                        <Grid container alignItems="center" justifyContent="center" style={{maxWidth: "750px"}}>
-                            {getAlbumGrid()}
                         </Grid>
                         {
                             albumResults.length 
@@ -213,10 +239,10 @@ function WebPlayback(props) {
                             }}
                         >
                             <Grid className="now-playing__name">{
-                                current_track.name
+                                current_track?.name
                             }</Grid>
                             <Grid className="now-playing__artist">{
-                                current_track.artists[0].name
+                                current_track?.artists[0]?.name
                             }</Grid>
                         </Grid>
                         <Grid
