@@ -47,9 +47,7 @@ function App() {
       justifyContent="center"
     >
       {accessToken 
-        ? <>
-          <WebPlayback token={accessToken} />
-        </>
+        ? <WebPlayback token={accessToken} />
         : <Button variant="outlined" onClick={() => redirectToAuthCodeFlow(clientId)}>
             <Typography variant="h3">Login</Typography>
           </Button>

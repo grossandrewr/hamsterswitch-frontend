@@ -5,6 +5,11 @@ import { playAlbum, searchForAlbum, getDevices, transferPlayback } from './auth.
 import { makeGPTRequest } from './openai.js';
 import TextField from '@mui/material/TextField';
 import { jelly } from 'ldrs'
+import { genres } from './constants.js'
+
+import IconButton from '@mui/material/IconButton';
+import SearchIcon from '@mui/icons-material/Search';
+import AlbumIcon from '@mui/icons-material/Album';
 
 jelly.register()
 
@@ -186,7 +191,7 @@ function WebPlayback(props) {
                                 style={{
                                     maxWidth: "100px",
                                     borderRadius: 100,
-                                    margin: "6px 20px"
+                                    margin: "6px 8px 6px 20px"
                                 }}
                                 onClick={() => handleSearchAlbums(searchString)}
                             >
@@ -291,19 +296,36 @@ function WebPlayback(props) {
                                 &gt;&gt;
                             </Button>
                         </Grid>
-                        <Button
-                            className="btn-spotify"
-                            onClick={() => setCurrentScreen(1)}
-                            variant="outlined"
-                            style={{
-                                borderRadius: 100,
-                                marginTop: "25px"
-                            }}
-                        >
-                            Find Albums
-                        </Button>
+
                     </Grid>
                 }
+            </Grid>
+            <Grid 
+                style={{
+                    marginTop: "50px"
+                }}
+            >
+                <IconButton
+                    onClick={() => setCurrentScreen(0)}
+                    style={{ 
+                        marginRight: "15px",
+                        color: currentScreen === 0 ? '#FFA500' : "grey",
+                    }}
+                >
+                    <AlbumIcon
+                        style={{ fontSize: 50 }}
+                    />
+                </IconButton>
+                <IconButton
+                    onClick={() => setCurrentScreen(1)}
+                    style={{
+                        color: currentScreen === 1 ? '#FFA500' : "grey",
+                    }}
+                >
+                    <SearchIcon
+                        style={{ fontSize: 50 }}
+                    />
+                </IconButton>
             </Grid>
         </>
     )
