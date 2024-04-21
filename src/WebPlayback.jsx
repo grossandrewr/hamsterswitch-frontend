@@ -91,7 +91,6 @@ function WebPlayback(props) {
       }
     }
     setTimeout(handleTransferPlayback, 2000)
-    requestRandomAlbums()
   }, [])
 
   const requestRandomAlbums = async () => {
@@ -152,176 +151,184 @@ function WebPlayback(props) {
 
   return (
     <>
-      <Grid className="container" style={{marginTop: "-100px"}}>
-        { currentScreen == 1 ? 
-          <Grid container direction="column" alignItems="center" justifyContent="center">
-            <Grid container alignItems="center" justifyContent="center" style={{ minHeight: "740px" }}>
-              {
-                !!isLoading 
-                ? <Grid container alignItems="center" justifyContent="center">
+      <Grid container alignItems="center" justifyContent="center" style={{ marginTop: "-100px" }}>
+        { currentScreen == 1 
+          ? <Grid container alignItems="center" justifyContent="center" height="740px">
+            {
+              !!isLoading
+                ? <Grid
+                  container
+                  alignItems="center"
+                  justifyContent="center"
+                  height="624px"
+                  widght="624px"
+                >
                   <l-jelly
                     size="220"
                     speed="2.0"
                     color="black"
                   ></l-jelly>
-                </Grid> 
-                : <Grid direction="row" container alignItems="center" justifyContent="center" style={{height: "624 px", maxWidth: "750px"}}>
+                </Grid>
+                : <Grid direction="row" container alignItems="center" justifyContent="center" style={{ height: "624px", maxWidth: "750px" }}>
                   {getAlbumGrid()}
                 </Grid>
-              }
-            </Grid>
-            <Grid container direction="row" alignItems="center" justifyContent="center">
-              <TextField
-                id="outlined-controlled"
-                label=""
-                value={searchString}
-                onChange={handleChangeText}
-                style={{ minWidth: "400px" }}
-                inputProps={{
-                  style: {
-                    height: "70px",
-                    padding: '0 14px',
-                    fontSize: '23px',
-                    color: "#1976d2",
-                  },
-                }}
-              />
-              <Button
-                variant="outlined"
-                style={{
-                  maxWidth: "100px",
-                  borderRadius: 100,
-                  margin: "6px 8px 6px 20px"
-                }}
-                onClick={() => handleSearchAlbums(searchString)}
-              >
-                OK
-              </Button>
-              <Button
-                variant="outlined"
-                style={{
-                  maxWidth: "100px",
-                  borderRadius: 100,
-                  margin: "6px 0px"
-                }}
-                onClick={() => requestRandomAlbums(searchString)}
-              >
-                Random
-              </Button>
-            </Grid>
+            }
           </Grid>
-          : <Grid 
-            className="main-wrapper"
+          : <Grid
             container
-            spacing={0}
-            direction="column"
+            height="740px"
+            width="740px"
             alignItems="center"
             justifyContent="center"
           >
             {
-              current_track && 
-              <img 
-                src={current_track.album.images[0].url}
-                className="now-playing__cover" alt="" 
-                width="400px"
-                height="400px"
-                style={{ 
-                  borderRadius: "5px",
-                  boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.2)"
-                }}
-              />
-            }
-            <Grid 
-              className="now-playing__side"
-              item
-              container
-              direction="column"
-              alignItems="center"
-              justifyContent="center"
-              style={{
-                margin: "14px 0",
-                fontSize: "20px",
-              }}
-            >
-              <Grid className="now-playing__name">{
-                current_track?.name
-              }</Grid>
-              <Grid className="now-playing__artist">{
-                current_track?.artists[0]?.name
-              }</Grid>
-            </Grid>
-            <Grid
-              item
-              container
-              direction="row"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <Button 
-                className="btn-spotify" 
-                onClick={() => { player.previousTrack() }} 
-                variant="outlined"
-                style={{
-                    borderRadius: 100
-                }}
-              >
-                &lt;&lt;
-              </Button>
-              <Button 
-                  className="btn-spotify" 
-                  onClick={() => { player.togglePlay() }} 
-                  variant="outlined"
+              current_track &&
+              <>
+                <img
+                  src={current_track.album.images[0].url}
+                  className="now-playing__cover" alt=""
+                  width="400px"
+                  height="400px"
                   style={{
-                    margin: "0 20px",
-                    height: "60px",
-                    width: "150px",
-                    borderRadius: 100,
+                    borderRadius: "5px",
+                    boxShadow: "-15px 15px 15px rgba(0, 0, 0, 0.3)"
                   }}
-              >
-                {is_paused ? "PLAY" : "PAUSE"}
-              </Button>
-              <Button 
-                className="btn-spotify" 
-                onClick={() => { player.nextTrack() }} 
-                variant="outlined"
+                />
+                <Grid 
+                className="now-playing__side"
+                item
+                container
+                direction="column"
+                alignItems="center"
+                justifyContent="center"
                 style={{
-                  borderRadius: 100,
+                  margin: "14px 0",
+                  fontSize: "20px",
                 }}
               >
-                &gt;&gt;
-              </Button>
-            </Grid>
+                <Grid className="now-playing__name">{
+                  current_track?.name
+                }</Grid>
+                <Grid className="now-playing__artist">{
+                  current_track?.artists[0]?.name
+                }</Grid>
+              </Grid>
+            </>
+            }
           </Grid>
         }
-      </Grid>
-      <Grid 
-        style={{
-          marginTop: "50px"
-        }}
-      >
-        <IconButton
-          onClick={() => setCurrentScreen(0)}
-          style={{ 
-            marginRight: "15px",
-            color: currentScreen === 0 ? '#FFA500' : "grey",
-          }}
-        >
-          <AlbumIcon
-            style={{ fontSize: 50 }}
-          />
-        </IconButton>
-        <IconButton
-          onClick={() => setCurrentScreen(1)}
+        { currentScreen == 1 
+          ? < Grid container direction="row" alignItems="center" justifyContent="center" height="50px">
+            <TextField
+              id="outlined-controlled"
+              label=""
+              value={searchString}
+              onChange={handleChangeText}
+              style={{ minWidth: "400px" }}
+              inputProps={{
+                style: {
+                  height: "70px",
+                  padding: '0 14px',
+                  fontSize: '23px',
+                  color: "#1976d2",
+                },
+              }}
+            />
+            <Button
+              variant="outlined"
+              style={{
+                maxWidth: "100px",
+                borderRadius: 100,
+                margin: "6px 8px 6px 20px"
+              }}
+              onClick={() => handleSearchAlbums(searchString)}
+            >
+              OK
+            </Button>
+            <Button
+              variant="outlined"
+              style={{
+                maxWidth: "100px",
+                borderRadius: 100,
+                margin: "6px 0px"
+              }}
+              onClick={() => requestRandomAlbums(searchString)}
+            >
+              Random
+            </Button>
+          </Grid>
+          : <Grid
+            item
+            container
+            direction="row"
+            alignItems="center"
+            justifyContent="center"
+            height="50px"
+          >
+            <Button
+              className="btn-spotify"
+              onClick={() => { player.previousTrack() }}
+              variant="outlined"
+              style={{
+                borderRadius: 100
+              }}
+            >
+              &lt;&lt;
+            </Button>
+            <Button
+              className="btn-spotify"
+              onClick={() => { player.togglePlay() }}
+              variant="outlined"
+              style={{
+                margin: "0 20px",
+                height: "60px",
+                width: "150px",
+                borderRadius: 100,
+              }}
+            >
+              {is_paused ? "PLAY" : "PAUSE"}
+            </Button>
+            <Button
+              className="btn-spotify"
+              onClick={() => { player.nextTrack() }}
+              variant="outlined"
+              style={{
+                borderRadius: 100,
+              }}
+            >
+              &gt;&gt;
+            </Button>
+          </Grid>
+        }
+        <Grid
           style={{
-            color: currentScreen === 1 ? '#FFA500' : "grey",
+            marginTop: "50px"
           }}
         >
-          <SearchIcon
-            style={{ fontSize: 50 }}
-          />
-        </IconButton>
+          <IconButton
+            onClick={() => setCurrentScreen(0)}
+            style={{
+              marginRight: "15px",
+              color: currentScreen === 0 ? '#FFA500' : "grey",
+            }}
+          >
+            <AlbumIcon
+              style={{ fontSize: 50 }}
+            />
+          </IconButton>
+          <IconButton
+            onClick={() => setCurrentScreen(1)}
+            style={{
+              color: currentScreen === 1 ? '#FFA500' : "grey",
+            }}
+          >
+            <SearchIcon
+              style={{ fontSize: 50 }}
+            />
+          </IconButton>
+        </Grid>
       </Grid>
-    </>
+    </> 
   )
 }
 
