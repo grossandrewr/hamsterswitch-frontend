@@ -85,8 +85,15 @@ function WebPlayback(props) {
                 }
             }
         }
-        setTimeout(handleTransferPlayback, 1000)
+        setTimeout(handleTransferPlayback, 2000)
+        requestRandomAlbums()
     }, [])
+
+    const requestRandomAlbums = async () => {
+        const randomIndex = Math.floor(Math.random() * genres.length);
+        const randomGenre = genres[randomIndex];
+        handleSearchAlbums(`return interesting albums from the genre ${randomGenre}`)
+    }
 
     const handlePlayAlbum = async (albumId) => {
         await playAlbum(props.token, `spotify:album:${albumId}`)
@@ -143,7 +150,6 @@ function WebPlayback(props) {
             <Grid className="container" style={{marginTop: "-100px"}}>
                 { currentScreen == 1 ? 
                     <Grid container direction="column" alignItems="center" justifyContent="center">
-                        
                         <Grid container alignItems="center" justifyContent="center" style={{ minHeight: "740px" }}>
                             {
                                 !!isLoading 
@@ -186,21 +192,18 @@ function WebPlayback(props) {
                             >
                                 OK
                             </Button>
-                        </Grid>
-                        {
-                            albumResults.length 
-                            ? <Button
-                                onClick={() => setCurrentScreen(0)}
+                            <Button
                                 variant="outlined"
                                 style={{
+                                    maxWidth: "100px",
                                     borderRadius: 100,
-                                    marginTop: "25px"
+                                    margin: "6px 0px"
                                 }}
+                                onClick={() => requestRandomAlbums(searchString)}
                             >
-                                Now Playing
+                                Random
                             </Button>
-                            : <></>
-                        }
+                        </Grid>
                     </Grid>
                     : <Grid 
                         className="main-wrapper"
@@ -221,7 +224,6 @@ function WebPlayback(props) {
                                     borderRadius: "5px",
                                     boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.2)"
                                 }}
-
                             />
                         }
 
