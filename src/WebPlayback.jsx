@@ -32,6 +32,7 @@ function WebPlayback(props) {
   const [is_paused, setPaused] = useState(false);
   const [is_active, setActive] = useState(false);
   const [current_track, setTrack] = useState(track);
+  const [albumArtUrl, setAlbumArtUrl] = useState("");
   const [albumResults, setAlbumResults] = useState([]);
   const [currentScreen, setCurrentScreen] = useState(1);
   const [searchString, setSearchString] = useState("")
@@ -102,8 +103,10 @@ function WebPlayback(props) {
     handleSearchAlbums(`albums from the genre ${randomGenre}`)
   }
 
-  const handlePlayAlbum = async (albumId) => {
-    await playAlbum(props.token, `spotify:album:${albumId}`)
+  const handlePlayAlbum = async (album) => {
+    await playAlbum(props.token, `spotify:album:${album.id}`)
+    const albumArtUrl = album.images[0].url
+    setAlbumArtUrl(albumArtUrl)
     setCurrentScreen(0)
   }
 
@@ -136,12 +139,12 @@ function WebPlayback(props) {
   const getAlbumGrid = () => {
     if (!albumResults.length) return null
     return albumResults.map(album => 
-      <Button onClick={() => handlePlayAlbum(album.id)}>
+      <Button onClick={() => handlePlayAlbum(album)}>
         <img
           src={album.images[0].url}
           className="now-playing__cover" alt=""
-          width="300px"
-          height="300px"
+          width="307px"
+          height="307px"
           style={{ 
               borderRadius: "5px",
               boxShadow: "0px 0px 15px rgba(0, 0, 0, 0.4)"
@@ -178,7 +181,7 @@ function WebPlayback(props) {
                     color="black"
                   ></l-jelly>
                 </Grid>
-                : <Grid direction="row" container alignItems="center" justifyContent="center" style={{ height: "624px", maxWidth: "750px" }}>
+                : <Grid direction="row" container alignItems="center" justifyContent="center" style={{ height: "630px", maxWidth: "750px" }}>
                   {getAlbumGrid()}
                 </Grid>
             }
@@ -205,13 +208,12 @@ function WebPlayback(props) {
                   }}
                 >
                   <img
-                    src={current_track.album.images[0].url}
+                    src={albumArtUrl}
                     className="now-playing__cover" alt=""
-                    width="400px"
-                    height="400px"
+                    width="624px"
+                    height="624px"
                     style={{
                       margin: "auto",
-                      marginTop: "80px",
                       borderRadius: "5px",
                       boxShadow: "-15px 15px 15px rgba(0, 0, 0, 0.3)"
                     }}
@@ -228,7 +230,7 @@ function WebPlayback(props) {
             : ( current_track && 
               <Grid container direction="column" alignItems="center" justifyContent="center">
                 <Typography variant="h5">{current_track?.name}</Typography>
-                <Typography variant="h6">{current_track?.album.name} -- {current_track?.artists[0]?.name}</Typography>
+                  <Typography variant="h6">{current_track?.album.name}    •    {current_track?.artists[0]?.name}</Typography>
               </Grid>
             )
           }
