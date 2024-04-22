@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
+import { Typography } from '@mui/material';
+
 import { playAlbum, searchForAlbum, getDevices, transferPlayback } from './auth.js'
 import { makeGPTRequest } from './openai.js';
 import TextField from '@mui/material/TextField';
@@ -35,7 +37,8 @@ function WebPlayback(props) {
   const [searchString, setSearchString] = useState("")
   const [deviceId, setDeviceId] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-    
+  const [searchText, setSearchText] = useState("")
+  
   useEffect(() => {
     if (!document || !document.body) {
       return;
@@ -90,13 +93,13 @@ function WebPlayback(props) {
         }
       }
     }
-    setTimeout(handleTransferPlayback, 2000)
+    setTimeout(handleTransferPlayback, 3000)
   }, [])
 
   const requestRandomAlbums = async () => {
     const randomIndex = Math.floor(Math.random() * genres.length);
     const randomGenre = genres[randomIndex];
-    handleSearchAlbums(`return interesting albums from the genre ${randomGenre}`)
+    handleSearchAlbums(`albums from the genre ${randomGenre}`)
   }
 
   const handlePlayAlbum = async (albumId) => {
@@ -106,7 +109,11 @@ function WebPlayback(props) {
 
   const handleSearchAlbums = async (searchString) => {
     setIsLoading(true)
-    const constantAlbumsToFind = await handleGptRequest(searchString)
+    setSearchText(searchString)
+    const stringToSearch = searchString
+    setSearchString("")
+
+    const constantAlbumsToFind = await handleGptRequest(stringToSearch)
 
     const results = []
     for (let i = 0; i < 4; i++) {
@@ -117,7 +124,6 @@ function WebPlayback(props) {
     }
     setAlbumResults(results)
     setCurrentScreen(1)
-    setSearchString("")
     setIsLoading(false)
   }
 
@@ -151,9 +157,9 @@ function WebPlayback(props) {
 
   return (
     <>
-      <Grid container alignItems="center" justifyContent="center" style={{ marginTop: "-100px" }}>
+      <Grid container direction="column" alignItems="center" justifyContent="center" style={{ marginTop: "-50px" }}>
         { currentScreen == 1 
-          ? <Grid container alignItems="center" justifyContent="center" height="740px">
+          ? <Grid container alignItems="center" justifyContent="center" height="700px">
             {
               !!isLoading
                 ? <Grid
@@ -161,7 +167,10 @@ function WebPlayback(props) {
                   alignItems="center"
                   justifyContent="center"
                   height="624px"
-                  widght="624px"
+                  width="624px"
+                  style={{ 
+                    transform: "translateY(60px)"
+                  }}
                 >
                   <l-jelly
                     size="220"
@@ -176,47 +185,54 @@ function WebPlayback(props) {
           </Grid>
           : <Grid
             container
-            height="740px"
-            width="740px"
+            height="700px"
             alignItems="center"
             justifyContent="center"
           >
             {
               current_track &&
               <>
-                <img
-                  src={current_track.album.images[0].url}
-                  className="now-playing__cover" alt=""
-                  width="400px"
-                  height="400px"
-                  style={{
-                    borderRadius: "5px",
-                    boxShadow: "-15px 15px 15px rgba(0, 0, 0, 0.3)"
-                  }}
-                />
                 <Grid 
-                className="now-playing__side"
-                item
-                container
-                direction="column"
-                alignItems="center"
-                justifyContent="center"
-                style={{
-                  margin: "14px 0",
-                  fontSize: "20px",
-                }}
-              >
-                <Grid className="now-playing__name">{
-                  current_track?.name
-                }</Grid>
-                <Grid className="now-playing__artist">{
-                  current_track?.artists[0]?.name
-                }</Grid>
+                  className="now-playing__side"
+                  item
+                  container
+                  direction="column"
+                  alignItems="center"
+                  justifyContent="center"
+                  style={{
+                    margin: "14px 0",
+                    fontSize: "20px",
+                  }}
+                >
+                  <img
+                    src={current_track.album.images[0].url}
+                    className="now-playing__cover" alt=""
+                    width="400px"
+                    height="400px"
+                    style={{
+                      margin: "auto",
+                      marginTop: "80px",
+                      borderRadius: "5px",
+                      boxShadow: "-15px 15px 15px rgba(0, 0, 0, 0.3)"
+                    }}
+                  />
               </Grid>
             </>
             }
           </Grid>
         }
+        <Grid container direction="column" alignItems="center" justifyContent="center" style={{ marginBottom: "40px", height: "40px"}}>
+          {
+            currentScreen == 1 
+            ? searchText && <Typography variant="h6">You searched: {searchText}</Typography>
+            : ( current_track && 
+              <Grid container direction="column" alignItems="center" justifyContent="center">
+                <Typography variant="h5">{current_track?.name}</Typography>
+                <Typography variant="h6">{current_track?.album.name} -- {current_track?.artists[0]?.name}</Typography>
+              </Grid>
+            )
+          }
+        </Grid>
         { currentScreen == 1 
           ? < Grid container direction="row" alignItems="center" justifyContent="center" height="50px">
             <TextField
@@ -227,7 +243,7 @@ function WebPlayback(props) {
               style={{ minWidth: "400px" }}
               inputProps={{
                 style: {
-                  height: "70px",
+                  height: "60px",
                   padding: '0 14px',
                   fontSize: '23px',
                   color: "#1976d2",
