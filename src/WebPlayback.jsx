@@ -7,13 +7,19 @@ import { playAlbum, searchForAlbum, getDevices, transferPlayback } from './auth.
 import { makeGPTRequest } from './openai.js';
 import TextField from '@mui/material/TextField';
 import { jelly } from 'ldrs'
+import { ring2 } from 'ldrs'
 import { genres } from './constants.js'
 
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import AlbumIcon from '@mui/icons-material/Album';
+import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
+import SkipNextIcon from '@mui/icons-material/SkipNext';
+import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
+import PauseIcon from '@mui/icons-material/Pause';
 
 jelly.register()
+ring2.register()
 
 const track = {
   name: "",
@@ -223,14 +229,20 @@ function WebPlayback(props) {
             }
           </Grid>
         }
-        <Grid container direction="column" alignItems="center" justifyContent="center" style={{ marginBottom: "40px", height: "40px"}}>
+        <Grid 
+          container 
+          direction="column" 
+          alignItems="center" 
+          justifyContent="center" 
+          style={{ marginBottom: "40px", height: "40px" }}
+        >
           {
             currentScreen == 1 
-            ? searchText && <Typography variant="h6">You searched: {searchText}</Typography>
+              ? searchText && <Typography variant="h6" style={{ fontWeight: "bold" }}>{searchText}</Typography>
             : ( current_track && 
               <Grid container direction="column" alignItems="center" justifyContent="center">
-                <Typography variant="h5">{current_track?.name}</Typography>
-                  <Typography variant="h6">{current_track?.album.name}    •    {current_track?.artists[0]?.name}</Typography>
+                <Typography variant="h5" style={{fontWeight: "bold"}}>{current_track?.name}</Typography>
+                <Typography variant="h6">{current_track?.album.name} • {current_track?.artists[0]?.name}</Typography>
               </Grid>
             )
           }
@@ -283,44 +295,40 @@ function WebPlayback(props) {
             justifyContent="center"
             height="50px"
           >
-            <Button
-              className="btn-spotify"
-              onClick={() => { player.previousTrack() }}
-              variant="outlined"
-              style={{
-                borderRadius: 100
-              }}
-            >
-              &lt;&lt;
-            </Button>
-            <Button
-              className="btn-spotify"
-              onClick={() => { player.togglePlay() }}
-              variant="outlined"
-              style={{
-                margin: "0 20px",
-                height: "60px",
-                width: "150px",
-                borderRadius: 100,
-              }}
-            >
-              {is_paused ? "PLAY" : "PAUSE"}
-            </Button>
-            <Button
-              className="btn-spotify"
-              onClick={() => { player.nextTrack() }}
-              variant="outlined"
-              style={{
-                borderRadius: 100,
-              }}
-            >
-              &gt;&gt;
-            </Button>
+            <IconButton onClick={() => { player.previousTrack() }}>
+              <SkipPreviousIcon style={{ fontSize: 50 }}/>
+            </IconButton>
+            <IconButton onClick={() => { player.togglePlay() }}>
+              {
+                is_paused
+                ? <PlayCircleOutlineIcon style={{ fontSize: 60 }} />
+                : <PauseIcon style={{ padding: "13px", fontSize: 30, marginRight: "-68px", zIndex: 2 }} />
+              }
+            </IconButton>
+            {
+              !is_paused && 
+              < l-ring-2
+              size="52"
+              stroke="5"
+              stroke-length="0.25"
+              bg-opacity="0.1"
+              speed="1.7"
+              color="grey"
+              style={{marginRight: "9px", height: 60}}
+              ></l-ring-2 >
+            }
+            <IconButton onClick={() => { player.nextTrack() }}>
+              <SkipNextIcon style={{ fontSize: 50 }}/>
+            </IconButton>
+
+            
           </Grid>
         }
         <Grid
           style={{
-            marginTop: "50px"
+            marginTop: "50px",
+            paddingTop: "10px",
+            borderTop: "1px solid #CCCCCC"
           }}
         >
           <IconButton
