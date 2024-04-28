@@ -18,6 +18,9 @@ import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import PauseIcon from '@mui/icons-material/Pause';
 
+import AlbumsGrid from './components/AlbumGrid/index.jsx';
+import MainAlbumImg from './components/MainAlbumImg/index.jsx';
+
 jelly.register()
 ring2.register()
 
@@ -142,23 +145,7 @@ function WebPlayback(props) {
     return JSON.parse(gptAlbums);
   }
 
-  const getAlbumGrid = () => {
-    if (!albumResults.length) return null
-    return albumResults.map(album => 
-      <Button onClick={() => handlePlayAlbum(album)}>
-        <img
-          src={album.images[0].url}
-          className="now-playing__cover" alt=""
-          width="307px"
-          height="307px"
-          style={{ 
-              borderRadius: "5px",
-              boxShadow: "0px 0px 15px rgba(0, 0, 0, 0.4)"
-          }}
-        />
-      </Button>
-    )
-  }
+
 
   const handleChangeText = e => {
     setSearchString(e.target.value);
@@ -174,66 +161,14 @@ function WebPlayback(props) {
         style={{ height: "1000px", width: "100vw", paddingTop: "30px", }}
       >
         { currentScreen == 1 
-          ? <Grid container alignItems="center" justifyContent="center" height="700px">
-            {
-              !!isLoading
-                ? <Grid
-                  container
-                  alignItems="center"
-                  justifyContent="center"
-                  height="624px"
-                  width="624px"
-                  style={{ 
-                    transform: "translateY(60px)"
-                  }}
-                >
-                  <l-jelly
-                    size="220"
-                    speed="2.0"
-                    color="black"
-                  ></l-jelly>
-                </Grid>
-                : <Grid direction="row" container alignItems="center" justifyContent="center" style={{ height: "630px", maxWidth: "750px" }}>
-                  {getAlbumGrid()}
-                </Grid>
-            }
-          </Grid>
-          : <Grid
-            container
-            height="700px"
-            alignItems="center"
-            justifyContent="center"
-          >
-            {
-              current_track &&
-              <>
-                <Grid 
-                  className="now-playing__side"
-                  item
-                  container
-                  direction="column"
-                  alignItems="center"
-                  justifyContent="center"
-                  style={{
-                    margin: "14px 0",
-                    fontSize: "20px",
-                  }}
-                >
-                  <img
-                    src={albumArtUrl}
-                    className="now-playing__cover" alt=""
-                    width="624px"
-                    height="624px"
-                    style={{
-                      margin: "auto",
-                      borderRadius: "5px",
-                      boxShadow: "-15px 15px 15px rgba(0, 0, 0, 0.3)"
-                    }}
-                  />
-              </Grid>
-            </>
-            }
-          </Grid>
+          ? (
+            <AlbumsGrid 
+              isLoading={isLoading}
+              albumResults={albumResults}
+              handlePlayAlbum={handlePlayAlbum}
+            />
+          )
+          : <MainAlbumImg current_track={current_track} albumArtUrl={albumArtUrl}/>
         }
         <Grid 
           container 
