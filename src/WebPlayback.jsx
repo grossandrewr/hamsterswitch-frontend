@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import { Typography } from '@mui/material';
+import TextField from '@mui/material/TextField';
 
 import { playAlbum, searchForAlbum, getDevices, transferPlayback } from './auth.js'
 import { makeGPTRequest } from './openai.js';
-import TextField from '@mui/material/TextField';
+
 import { jelly } from 'ldrs'
 import { ring2 } from 'ldrs'
 import { genres } from './constants.js'
@@ -20,6 +21,7 @@ import PauseIcon from '@mui/icons-material/Pause';
 
 import AlbumsGrid from './components/AlbumGrid/index.jsx';
 import MainAlbumImg from './components/MainAlbumImg/index.jsx';
+import SearchBar from './components/SearchBar/index.jsx';
 
 jelly.register()
 ring2.register()
@@ -145,8 +147,6 @@ function WebPlayback(props) {
     return JSON.parse(gptAlbums);
   }
 
-
-
   const handleChangeText = e => {
     setSearchString(e.target.value);
   }
@@ -189,45 +189,12 @@ function WebPlayback(props) {
           }
         </Grid>
         { currentScreen == 1 
-          ? <Grid container direction="row" alignItems="center" justifyContent="center" height="50px">
-              <TextField
-                id="outlined-controlled"
-                label=""
-                value={searchString}
-                onChange={handleChangeText}
-                style={{ minWidth: "400px" }}
-                inputProps={{
-                  style: {
-                    height: "60px",
-                    padding: '0 14px',
-                    fontSize: '23px',
-                    color: "#1976d2",
-                  },
-                }}
-              />
-              <Button
-                variant="outlined"
-                style={{
-                  maxWidth: "100px",
-                  borderRadius: 100,
-                  margin: "6px 8px 6px 20px"
-                }}
-                onClick={() => handleSearchAlbums(searchString)}
-              >
-                OK
-              </Button>
-              <Button
-                variant="outlined"
-                style={{
-                  maxWidth: "100px",
-                  borderRadius: 100,
-                  margin: "6px 0px"
-                }}
-                onClick={() => requestRandomAlbums(searchString)}
-              >
-                Random
-              </Button>
-            </Grid>
+          ? <SearchBar
+            searchString={searchString}
+            handleChangeText={handleChangeText}
+            handleSearchAlbums={handleSearchAlbums}
+            requestRandomAlbums={requestRandomAlbums}
+          />
           : <Grid
             item
             container
@@ -274,7 +241,7 @@ function WebPlayback(props) {
             }
           </Grid>
         }
-          <Grid
+        <Grid
           style={{
             marginTop: "50px",
             paddingTop: "10px",
