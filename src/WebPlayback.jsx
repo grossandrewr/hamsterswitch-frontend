@@ -165,8 +165,14 @@ function WebPlayback(props) {
   }
 
   return (
-    <>
-      <Grid container direction="column" alignItems="center" justifyContent="center" style={{ marginTop: "-50px" }}>
+    <Grid style={{ height: "100%", overflowY: "scroll" }}>
+      <Grid 
+        container 
+        direction="column" 
+        alignItems="center" 
+        justifyContent="flex-start" 
+        style={{ height: "1000px", width: "100vw", paddingTop: "30px", }}
+      >
         { currentScreen == 1 
           ? <Grid container alignItems="center" justifyContent="center" height="700px">
             {
@@ -238,7 +244,7 @@ function WebPlayback(props) {
         >
           {
             currentScreen == 1 
-              ? searchText && <Typography variant="h6" style={{ fontWeight: "bold" }}>{searchText}</Typography>
+            ? searchText && <Typography variant="h6" style={{ fontWeight: "bold" }}>{searchText}</Typography>
             : ( current_track && 
               <Grid container direction="column" alignItems="center" justifyContent="center">
                 <Typography variant="h5" style={{fontWeight: "bold"}}>{current_track?.name}</Typography>
@@ -248,45 +254,45 @@ function WebPlayback(props) {
           }
         </Grid>
         { currentScreen == 1 
-          ? < Grid container direction="row" alignItems="center" justifyContent="center" height="50px">
-            <TextField
-              id="outlined-controlled"
-              label=""
-              value={searchString}
-              onChange={handleChangeText}
-              style={{ minWidth: "400px" }}
-              inputProps={{
-                style: {
-                  height: "60px",
-                  padding: '0 14px',
-                  fontSize: '23px',
-                  color: "#1976d2",
-                },
-              }}
-            />
-            <Button
-              variant="outlined"
-              style={{
-                maxWidth: "100px",
-                borderRadius: 100,
-                margin: "6px 8px 6px 20px"
-              }}
-              onClick={() => handleSearchAlbums(searchString)}
-            >
-              OK
-            </Button>
-            <Button
-              variant="outlined"
-              style={{
-                maxWidth: "100px",
-                borderRadius: 100,
-                margin: "6px 0px"
-              }}
-              onClick={() => requestRandomAlbums(searchString)}
-            >
-              Random
-            </Button>
-          </Grid>
+          ? <Grid container direction="row" alignItems="center" justifyContent="center" height="50px">
+              <TextField
+                id="outlined-controlled"
+                label=""
+                value={searchString}
+                onChange={handleChangeText}
+                style={{ minWidth: "400px" }}
+                inputProps={{
+                  style: {
+                    height: "60px",
+                    padding: '0 14px',
+                    fontSize: '23px',
+                    color: "#1976d2",
+                  },
+                }}
+              />
+              <Button
+                variant="outlined"
+                style={{
+                  maxWidth: "100px",
+                  borderRadius: 100,
+                  margin: "6px 8px 6px 20px"
+                }}
+                onClick={() => handleSearchAlbums(searchString)}
+              >
+                OK
+              </Button>
+              <Button
+                variant="outlined"
+                style={{
+                  maxWidth: "100px",
+                  borderRadius: 100,
+                  margin: "6px 0px"
+                }}
+                onClick={() => requestRandomAlbums(searchString)}
+              >
+                Random
+              </Button>
+            </Grid>
           : <Grid
             item
             container
@@ -294,37 +300,46 @@ function WebPlayback(props) {
             alignItems="center"
             justifyContent="center"
             height="50px"
-          >
-            <IconButton onClick={() => { player.previousTrack() }}>
-              <SkipPreviousIcon style={{ fontSize: 50 }}/>
-            </IconButton>
-            <IconButton onClick={() => { player.togglePlay() }}>
-              {
-                is_paused
-                ? <PlayCircleOutlineIcon style={{ fontSize: 60 }} />
-                : <PauseIcon style={{ padding: "13px", fontSize: 30, marginRight: "-68px", zIndex: 2 }} />
-              }
-            </IconButton>
+            width="300px"
+            style={{ position: "relative"}}
+          > 
+            <Grid container style={{ alignItems: "center", justifyContent: "center", height: "70px", width: "70px"}}>
+              <IconButton onClick={() => { player.previousTrack() }}>
+                <SkipPreviousIcon style={{ fontSize: 50 }} />
+              </IconButton>
+            </Grid>
+            <Grid container direction="column" style={{ alignItems: "center", justifyContent: "center", height: "70px", width: "70px"}}>
+              <IconButton style={{ height: "60px", width: "60px" }} onClick={() => { player.togglePlay() }}>
+                {
+                  is_paused
+                    ? <PlayCircleOutlineIcon style={{ fontSize: 60 }} />
+                    : <PauseIcon style={{ fontSize: 30, zIndex: 2 }} />
+                }
+              </IconButton>
+            </Grid>
+            <Grid container style={{ alignItems: "center", justifyContent: "center", height: "70px", width: "70px"}}>
+              <IconButton onClick={() => { player.nextTrack() }}>
+                <SkipNextIcon style={{ fontSize: 50 }} />
+              </IconButton>
+            </Grid>
             {
-              !is_paused && 
-              < l-ring-2
-              size="52"
-              stroke="5"
-              stroke-length="0.25"
-              bg-opacity="0.1"
-              speed="1.7"
-              color="grey"
-              style={{marginRight: "9px", height: 60}}
-              ></l-ring-2 >
+              !is_paused &&
+              <Grid
+                style={{ position: "absolute", left: 125, top: 9 }}
+              >
+                <l-ring-2
+                  size="51"
+                  stroke="6"
+                  stroke-length="0.3"
+                  bg-opacity="0.1"
+                  speed="1.7"
+                  color="grey"
+                ></l-ring-2 >
+              </Grid>
             }
-            <IconButton onClick={() => { player.nextTrack() }}>
-              <SkipNextIcon style={{ fontSize: 50 }}/>
-            </IconButton>
-
-            
           </Grid>
         }
-        <Grid
+          <Grid
           style={{
             marginTop: "50px",
             paddingTop: "10px",
@@ -354,7 +369,7 @@ function WebPlayback(props) {
           </IconButton>
         </Grid>
       </Grid>
-    </> 
+    </Grid> 
   )
 }
 
