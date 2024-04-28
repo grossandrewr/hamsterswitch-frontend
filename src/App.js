@@ -48,9 +48,12 @@ function App() {
     >
       {accessToken 
         ? <WebPlayback token={accessToken} />
-        : <Button variant="outlined" onClick={() => redirectToAuthCodeFlow(clientId)}>
-            <Typography variant="h3">Login</Typography>
+        : <>
+          <Typography variant="h2" style={{marginBottom: "20px"}}>Albumatrix</Typography>
+          <Button variant="outlined" style={{borderRadius: "100px", padding: "12px 20px"}} onClick={() => redirectToAuthCodeFlow(clientId)}>
+            <Typography>Login to Spotify</Typography>
           </Button>
+        </>
       }
     </Grid>
   );
