@@ -17,7 +17,7 @@ const PlayButtons = ({ player, is_paused }) => {
       justifyContent="center"
       height="50px"
       width="300px"
-      style={{ position: "relative", marginTop: "20px" }}
+      style={{ position: "relative", marginTop: "50px" }}
     >
       <Grid container style={{ alignItems: "center", justifyContent: "center", height: "70px", width: "70px" }}>
         <IconButton onClick={() => { player.previousTrack() }}>

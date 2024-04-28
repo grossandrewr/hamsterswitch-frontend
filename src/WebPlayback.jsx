@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
-import { Typography } from '@mui/material';
 
 import { playAlbum, searchForAlbum, getDevices, transferPlayback } from './auth.js'
 import { makeGPTRequest } from './openai.js';
@@ -14,6 +13,7 @@ import MainAlbumImg from './components/MainAlbumImg/index.jsx';
 import SearchBar from './components/SearchBar/index.jsx';
 import PlayButtons from './components/PlayButtons/index.jsx';
 import Navbar from './components/Navbar/index.jsx';
+import TrackInfo from './components/TrackInfo/index.jsx';
 
 jelly.register()
 ring2.register()
@@ -150,7 +150,7 @@ function WebPlayback(props) {
         direction="column" 
         alignItems="center" 
         justifyContent="flex-start" 
-        style={{ height: "1000px", width: "100vw", paddingTop: "30px", }}
+        style={{ height: "1200px", width: "100vw", paddingTop: "30px", }}
       >
         { currentScreen == 1 
           ? (
@@ -178,12 +178,7 @@ function WebPlayback(props) {
                 handleSearchAlbums={handleSearchAlbums}
                 requestRandomAlbums={requestRandomAlbums}
               />
-            : ( current_track && 
-              <Grid container direction="column" alignItems="center" justifyContent="center">
-                <Typography variant="h5" style={{fontWeight: "bold"}}>{current_track?.name}</Typography>
-                <Typography variant="h6">{current_track?.album.name} • {current_track?.artists[0]?.name}</Typography>
-              </Grid>
-            )
+            : current_track && <TrackInfo current_track={current_track}/>
           }
         </Grid>
         <PlayButtons player={player} is_paused={is_paused} />
