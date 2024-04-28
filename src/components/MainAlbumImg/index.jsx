@@ -32,7 +32,7 @@ const MainAlbumImg = ({current_track, albumArtUrl}) => {
               style={{
                 margin: "auto",
                 borderRadius: "5px",
-                boxShadow: "-15px 15px 15px rgba(0, 0, 0, 0.3)"
+                boxShadow: "-10px 5px 40px rgba(0, 0, 0, 0.3)"
               }}
             />
           </Grid>
