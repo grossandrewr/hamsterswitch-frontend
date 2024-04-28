@@ -11,8 +11,7 @@ import { genres } from './constants.js'
 import AlbumsGrid from './components/AlbumGrid/index.jsx';
 import MainAlbumImg from './components/MainAlbumImg/index.jsx';
 import SearchBar from './components/SearchBar/index.jsx';
-import PlayButtons from './components/PlayButtons/index.jsx';
-import Navbar from './components/Navbar/index.jsx';
+import ControlPanel from './components/ControlPanel/index.jsx';
 import TrackInfo from './components/TrackInfo/index.jsx';
 
 jelly.register()
@@ -181,8 +180,12 @@ function WebPlayback(props) {
             : current_track && <TrackInfo current_track={current_track}/>
           }
         </Grid>
-        <PlayButtons player={player} is_paused={is_paused} />
-        <Navbar currentScreen={currentScreen} setCurrentScreen={setCurrentScreen}/>
+        <ControlPanel
+          player={player} 
+          is_paused={is_paused} 
+          currentScreen={currentScreen} 
+          setCurrentScreen={setCurrentScreen}
+        />
       </Grid>
     </Grid> 
   )
