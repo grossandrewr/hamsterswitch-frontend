@@ -171,15 +171,13 @@ function WebPlayback(props) {
         >
           {
             currentScreen == 1 
-            ? <Grid direction="column">
-              <Typography variant="h6" style={{ fontWeight: "bold" }}>{searchText}</Typography>
-              <SearchBar
+            ? <SearchBar
                 searchString={searchString}
+                searchText={searchText}
                 handleChangeText={handleChangeText}
                 handleSearchAlbums={handleSearchAlbums}
                 requestRandomAlbums={requestRandomAlbums}
               />
-            </Grid>
             : ( current_track && 
               <Grid container direction="column" alignItems="center" justifyContent="center">
                 <Typography variant="h5" style={{fontWeight: "bold"}}>{current_track?.name}</Typography>
