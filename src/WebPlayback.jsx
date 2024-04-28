@@ -9,14 +9,11 @@ import { jelly } from 'ldrs'
 import { ring2 } from 'ldrs'
 import { genres } from './constants.js'
 
-import IconButton from '@mui/material/IconButton';
-import SearchIcon from '@mui/icons-material/Search';
-import AlbumIcon from '@mui/icons-material/Album';
-
 import AlbumsGrid from './components/AlbumGrid/index.jsx';
 import MainAlbumImg from './components/MainAlbumImg/index.jsx';
 import SearchBar from './components/SearchBar/index.jsx';
-import PlayButtons from './components/PlayButtons/index.js';
+import PlayButtons from './components/PlayButtons/index.jsx';
+import Navbar from './components/Navbar/index.jsx';
 
 jelly.register()
 ring2.register()
@@ -174,7 +171,15 @@ function WebPlayback(props) {
         >
           {
             currentScreen == 1 
-            ? searchText && <Typography variant="h6" style={{ fontWeight: "bold" }}>{searchText}</Typography>
+            ? <Grid direction="column">
+              <Typography variant="h6" style={{ fontWeight: "bold" }}>{searchText}</Typography>
+              <SearchBar
+                searchString={searchString}
+                handleChangeText={handleChangeText}
+                handleSearchAlbums={handleSearchAlbums}
+                requestRandomAlbums={requestRandomAlbums}
+              />
+            </Grid>
             : ( current_track && 
               <Grid container direction="column" alignItems="center" justifyContent="center">
                 <Typography variant="h5" style={{fontWeight: "bold"}}>{current_track?.name}</Typography>
@@ -183,44 +188,8 @@ function WebPlayback(props) {
             )
           }
         </Grid>
-        { currentScreen == 1 
-          ? <SearchBar
-            searchString={searchString}
-            handleChangeText={handleChangeText}
-            handleSearchAlbums={handleSearchAlbums}
-            requestRandomAlbums={requestRandomAlbums}
-          />
-          : <PlayButtons player={player} is_paused={is_paused}/>
-        }
-        <Grid
-          style={{
-            marginTop: "50px",
-            paddingTop: "10px",
-            borderTop: "1px solid #CCCCCC"
-          }}
-        >
-          <IconButton
-            onClick={() => setCurrentScreen(0)}
-            style={{
-              marginRight: "15px",
-              color: currentScreen === 0 ? '#FFA500' : "grey",
-            }}
-          >
-            <AlbumIcon
-              style={{ fontSize: 50 }}
-            />
-          </IconButton>
-          <IconButton
-            onClick={() => setCurrentScreen(1)}
-            style={{
-              color: currentScreen === 1 ? '#FFA500' : "grey",
-            }}
-          >
-            <SearchIcon
-              style={{ fontSize: 50 }}
-            />
-          </IconButton>
-        </Grid>
+        <PlayButtons player={player} is_paused={is_paused} />
+        <Navbar currentScreen={currentScreen} setCurrentScreen={setCurrentScreen}/>
       </Grid>
     </Grid> 
   )
