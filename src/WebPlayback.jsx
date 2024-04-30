@@ -13,6 +13,7 @@ import MainAlbumImg from './components/MainAlbumImg/index.jsx';
 import SearchBar from './components/SearchBar/index.jsx';
 import ControlPanel from './components/ControlPanel/index.jsx';
 import TrackInfo from './components/TrackInfo/index.jsx';
+import IntroScreen from './components/IntroScreen/index.jsx';
 
 jelly.register()
 ring2.register()
@@ -41,6 +42,7 @@ function WebPlayback(props) {
   const [deviceId, setDeviceId] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [searchText, setSearchText] = useState("")
+  const [onIntroScreen, setOnIntroScreen] = useState(true)
   
   useEffect(() => {
     if (!document || !document.body) {
@@ -114,6 +116,7 @@ function WebPlayback(props) {
 
   const handleSearchAlbums = async (searchString) => {
     setIsLoading(true)
+    setOnIntroScreen(false)
     setSearchText(searchString)
     const stringToSearch = searchString
     setSearchString("")
@@ -144,49 +147,59 @@ function WebPlayback(props) {
 
   return (
     <Grid style={{ height: "100%", overflowY: "scroll" }}>
-      <Grid 
-        container 
-        direction="column" 
-        alignItems="center" 
-        justifyContent="flex-start" 
-        style={{ height: "1200px", width: "100vw", paddingTop: "30px", }}
-      >
-        { currentScreen == 1 
-          ? (
-            <AlbumsGrid 
-              isLoading={isLoading}
-              albumResults={albumResults}
-              handlePlayAlbum={handlePlayAlbum}
-            />
-          )
-          : <MainAlbumImg current_track={current_track} albumArtUrl={albumArtUrl}/>
-        }
-        <Grid 
+      {
+        onIntroScreen
+          ? <IntroScreen
+            searchString={searchString}
+            searchText={searchText}
+            handleChangeText={handleChangeText}
+            handleSearchAlbums={handleSearchAlbums}
+            requestRandomAlbums={requestRandomAlbums}
+          />
+        : <Grid 
           container 
           direction="column" 
           alignItems="center" 
-          justifyContent="center" 
-          style={{ marginBottom: "40px", height: "40px" }}
+          justifyContent="flex-start" 
+          style={{ height: "1200px", width: "100vw", paddingTop: "30px", }}
         >
-          {
-            currentScreen == 1 
-            ? <SearchBar
-                searchString={searchString}
-                searchText={searchText}
-                handleChangeText={handleChangeText}
-                handleSearchAlbums={handleSearchAlbums}
-                requestRandomAlbums={requestRandomAlbums}
+          { currentScreen == 1 
+            ? (
+              <AlbumsGrid 
+                isLoading={isLoading}
+                albumResults={albumResults}
+                handlePlayAlbum={handlePlayAlbum}
               />
-            : current_track && <TrackInfo current_track={current_track}/>
+            )
+            : <MainAlbumImg current_track={current_track} albumArtUrl={albumArtUrl}/>
           }
+          <Grid 
+            container 
+            direction="column" 
+            alignItems="center" 
+            justifyContent="center" 
+            style={{ marginBottom: "40px", height: "40px" }}
+          >
+            {
+              currentScreen == 1 
+              ? <SearchBar
+                  searchString={searchString}
+                  searchText={searchText}
+                  handleChangeText={handleChangeText}
+                  handleSearchAlbums={handleSearchAlbums}
+                  requestRandomAlbums={requestRandomAlbums}
+                />
+              : current_track && <TrackInfo current_track={current_track}/>
+            }
+          </Grid>
+          <ControlPanel
+            player={player} 
+            is_paused={is_paused} 
+            currentScreen={currentScreen} 
+            setCurrentScreen={setCurrentScreen}
+          />
         </Grid>
-        <ControlPanel
-          player={player} 
-          is_paused={is_paused} 
-          currentScreen={currentScreen} 
-          setCurrentScreen={setCurrentScreen}
-        />
-      </Grid>
+      }
     </Grid> 
   )
 }
