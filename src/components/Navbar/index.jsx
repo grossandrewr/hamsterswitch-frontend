@@ -8,17 +8,24 @@ import AlbumIcon from '@mui/icons-material/Album';
 
 const Navbar = ({ currentScreen, setCurrentScreen }) => {
   return (
-    <Grid
+    <Grid 
+      item
+      container
+      direction="row"
+      alignItems="center"
+      justifyContent="flex-start"
+      height="60px"
+      xs={6}
       style={{
-        marginTop: "30px",
-        paddingTop: "10px",
-        borderTop: "1px solid #CCCCCC"
+        paddingLeft: "24px",
+        borderLeft: "3px solid grey",
+        minWidth: "300px"
       }}
     >
       <IconButton
         onClick={() => setCurrentScreen(0)}
         style={{
-          marginRight: "15px",
+          marginRight: "10px",
           color: currentScreen === 0 ? '#FFA500' : "grey",
         }}
       >
