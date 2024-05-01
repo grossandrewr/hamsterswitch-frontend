@@ -6,6 +6,8 @@ import { makeGPTRequest } from './openai.js';
 
 import { jelly } from 'ldrs'
 import { ring2 } from 'ldrs'
+import { quantum } from 'ldrs'
+
 import { genres } from './constants.js'
 
 import AlbumsGrid from './components/AlbumGrid/index.jsx';
@@ -17,6 +19,7 @@ import IntroScreen from './components/IntroScreen/index.jsx';
 
 jelly.register()
 ring2.register()
+quantum.register()
 
 const track = {
   name: "",
@@ -43,7 +46,8 @@ function WebPlayback(props) {
   const [isLoading, setIsLoading] = useState(false)
   const [searchText, setSearchText] = useState("")
   const [onIntroScreen, setOnIntroScreen] = useState(true)
-  
+  const [progressText, setProgressText] = useState("")
+
   useEffect(() => {
     if (!document || !document.body) {
       return;
@@ -101,6 +105,18 @@ function WebPlayback(props) {
     setTimeout(handleTransferPlayback, 3000)
   }, [])
 
+  const cycleProgressText = () => {
+    const string1 = "Analyzing your query... "
+    const string2 = "Running the algorithm... "
+    const string3 = "Processing albums..."
+    const string4 = "Almost ready... "
+
+    setTimeout(() => setProgressText(string1), 0)
+    setTimeout(() => setProgressText(string2), 1000)
+    setTimeout(() => setProgressText(string3), 3750)
+    setTimeout(() => setProgressText(string4), 6500)
+  }
+
   const requestRandomAlbums = async () => {
     const randomIndex = Math.floor(Math.random() * genres.length);
     const randomGenre = genres[randomIndex];
@@ -116,11 +132,10 @@ function WebPlayback(props) {
 
   const handleSearchAlbums = async (searchString) => {
     setIsLoading(true)
-    setOnIntroScreen(false)
     setSearchText(searchString)
     const stringToSearch = searchString
     setSearchString("")
-
+    cycleProgressText()
     const constantAlbumsToFind = await handleGptRequest(stringToSearch)
 
     const results = []
@@ -131,6 +146,7 @@ function WebPlayback(props) {
       results.push(albumResult)
     }
     setAlbumResults(results)
+    setOnIntroScreen(false)
     setCurrentScreen(1)
     setIsLoading(false)
   }
@@ -155,6 +171,8 @@ function WebPlayback(props) {
             handleChangeText={handleChangeText}
             handleSearchAlbums={handleSearchAlbums}
             requestRandomAlbums={requestRandomAlbums}
+            isLoading={isLoading}
+            progressText={progressText}
           />
         : <Grid 
           container 
@@ -169,6 +187,7 @@ function WebPlayback(props) {
                 isLoading={isLoading}
                 albumResults={albumResults}
                 handlePlayAlbum={handlePlayAlbum}
+                progressText={progressText}
               />
             )
             : <MainAlbumImg current_track={current_track} albumArtUrl={albumArtUrl}/>

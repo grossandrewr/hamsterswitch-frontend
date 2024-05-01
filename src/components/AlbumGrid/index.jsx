@@ -1,6 +1,7 @@
 import React from 'react';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
+import { Typography } from '@mui/material';
 
 
 const getAlbumGrid = (albumResults, handlePlayAlbum) => {
@@ -21,13 +22,14 @@ const getAlbumGrid = (albumResults, handlePlayAlbum) => {
   )
 }
 
-const AlbumsGrid = ({ isLoading, albumResults, handlePlayAlbum }) => {
+const AlbumsGrid = ({ isLoading, albumResults, handlePlayAlbum, progressText }) => {
   return (
     <Grid container alignItems="center" justifyContent="center" height="700px">
       {
-        !!isLoading
+        isLoading
           ? <Grid
             container
+            direction="column"
             alignItems="center"
             justifyContent="center"
             height="624px"
@@ -36,11 +38,12 @@ const AlbumsGrid = ({ isLoading, albumResults, handlePlayAlbum }) => {
               transform: "translateY(60px)"
             }}
           >
-            <l-jelly
-              size="220"
-              speed="2.0"
+            <l-quantum
+              size="120"
+              speed="3"
               color="black"
-            ></l-jelly>
+            ></l-quantum>
+            <Typography style={{marginTop: "40px"}}>{progressText}</Typography>
           </Grid>
           : <Grid direction="row" container alignItems="center" justifyContent="center" style={{ height: "630px", maxWidth: "750px" }}>
             {getAlbumGrid(albumResults, handlePlayAlbum)}

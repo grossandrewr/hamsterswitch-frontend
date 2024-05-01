@@ -10,28 +10,48 @@ const IntroScreen = ({
   searchText,
   handleChangeText,
   handleSearchAlbums,
-  requestRandomAlbums
+  requestRandomAlbums,
+  isLoading,
+  progressText
 }) => {
   return (
-    <Grid
-      container
-      direction="column"
-      alignItems="center"
-      justifyContent="center"
-      style={{ height: "100vh", width: "100vw" }}
-    >
-      <Typography variant="h4"> What do you want to listen to?</Typography>
-      <Typography variant="h6">Try something like "Psychedelic rock from the 70s"</Typography>
-      <Typography variant="h6">or "Jazz albums with Max Roach on the drums"</Typography>
-      <SearchBar
-        searchString={searchString}
-        searchText={searchText}
-        handleChangeText={handleChangeText}
-        handleSearchAlbums={handleSearchAlbums}
-        requestRandomAlbums={requestRandomAlbums}
-      />
-    </Grid>
-
+    <>
+    {
+      isLoading 
+      ? <Grid
+        container
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+        style={{ height: "100vh", width: "100vw" }}
+      >
+        <l-quantum
+          size="140"
+          speed="3"
+          color="black"
+        ></l-quantum>
+      <Typography style={{marginTop: "40px"}}>{progressText}</Typography>
+      </Grid>
+      : <Grid
+        container
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+        style={{ height: "100vh", width: "100vw" }}
+      >
+        <Typography variant="h4"> What do you want to listen to?</Typography>
+        <Typography variant="h6">Try something like "Psychedelic rock from the 70s"</Typography>
+        <Typography variant="h6">or "Jazz albums with Max Roach on the drums"</Typography>
+        <SearchBar
+          searchString={searchString}
+          searchText={searchText}
+          handleChangeText={handleChangeText}
+          handleSearchAlbums={handleSearchAlbums}
+          requestRandomAlbums={requestRandomAlbums}
+        />
+      </Grid>
+    }
+    </>
   )
 }
 

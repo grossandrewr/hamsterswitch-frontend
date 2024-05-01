@@ -11,9 +11,11 @@ const SearchBar = ({
   handleSearchAlbums,
   requestRandomAlbums
 }) => {
+  const searchTextToDisplay = searchText ? `You searched: ${searchText}` : ""
+  
   return (
     <Grid direction="column" align="center">
-      <Typography variant="h6" style={{ fontWeight: "bold", margin: "35px 0 20px 0" }}>{searchText}</Typography>
+      <Typography variant="h6" style={{ margin: "35px 0 20px 0" }}>{searchTextToDisplay}</Typography>
       <Grid container direction="row" alignItems="center" justifyContent="center" height="50px">
         <TextField
           id="outlined-controlled"
