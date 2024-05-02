@@ -179,7 +179,7 @@ function WebPlayback(props) {
           direction="column" 
           alignItems="center" 
           justifyContent="flex-start" 
-          style={{ height: "1200px", width: "100vw", paddingTop: "30px", }}
+          style={{ height: "100vh", width: "100vw", paddingTop: "30px", }}
         >
           { currentScreen == 1 
             ? (
