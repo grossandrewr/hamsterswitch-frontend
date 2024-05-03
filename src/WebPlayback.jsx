@@ -152,9 +152,8 @@ function WebPlayback(props) {
   }
 
   const handleGptRequest = async (searchString) => {
-    const gptResult = await makeGPTRequest(searchString);
-    const gptAlbums = gptResult?.message?.content;
-    return JSON.parse(gptAlbums);
+    const response = await makeGPTRequest(searchString);
+    return JSON.parse(response.data);
   }
 
   const handleChangeText = e => {
