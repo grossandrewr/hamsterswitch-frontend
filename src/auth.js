@@ -1,13 +1,14 @@
 export async function redirectToAuthCodeFlow(clientId) {
     const verifier = generateCodeVerifier(128);
     const challenge = await generateCodeChallenge(verifier);
+    const frontendUrl = process.env.REACT_APP_FRONTEND_URL;
 
     localStorage.setItem("verifier", verifier);
 
     const params = new URLSearchParams();
     params.append("client_id", clientId);
     params.append("response_type", "code");
-    params.append("redirect_uri", "http://localhost:3000/callback");
+    params.append("redirect_uri", `${frontendUrl}/callback`);
     params.append("scope", "streaming user-read-private user-read-email user-read-currently-playing user-read-playback-state user-modify-playback-state app-remote-control");
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
@@ -35,13 +36,14 @@ async function generateCodeChallenge(codeVerifier) {
 }
 
 export async function getAccessToken(clientId, code) {
+    const frontendUrl = process.env.REACT_APP_FRONTEND_URL;
     const verifier = localStorage.getItem("verifier");
 
     const params = new URLSearchParams();
     params.append("client_id", clientId);
     params.append("grant_type", "authorization_code");
     params.append("code", code);
-    params.append("redirect_uri", "http://localhost:3000/callback");
+    params.append("redirect_uri", `${frontendUrl}/callback`);
     params.append("code_verifier", verifier);
     const result = await fetch("https://accounts.spotify.com/api/token", {
         method: "POST",
