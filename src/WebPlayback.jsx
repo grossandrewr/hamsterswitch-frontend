@@ -4,8 +4,6 @@ import Grid from '@mui/material/Grid';
 import { playAlbum, searchForAlbum, getDevices, transferPlayback } from './auth.js'
 import { makeGPTRequest } from './openai.js';
 
-import { jelly } from 'ldrs'
-import { ring2 } from 'ldrs'
 import { quantum } from 'ldrs'
 
 import { genres } from './constants.js'
@@ -17,8 +15,6 @@ import ControlPanel from './components/ControlPanel/index.jsx';
 import TrackInfo from './components/TrackInfo/index.jsx';
 import IntroScreen from './components/IntroScreen/index.jsx';
 
-jelly.register()
-ring2.register()
 quantum.register()
 
 const track = {
