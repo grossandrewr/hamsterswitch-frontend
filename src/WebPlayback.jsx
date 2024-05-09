@@ -138,7 +138,9 @@ function WebPlayback(props) {
     for (let i = 0; i < 4; i++) {
       const albumName = constantAlbumsToFind[i]['album'];
       const artistName = constantAlbumsToFind[i]['artist'];
+      const albumDescription = constantAlbumsToFind[i]['description'];
       const albumResult = await searchForAlbum(props.token, albumName, artistName);
+      albumResult['gptDescription'] = albumDescription
       results.push(albumResult)
     }
     setAlbumResults(results)
