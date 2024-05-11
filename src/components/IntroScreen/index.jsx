@@ -14,6 +14,8 @@ const IntroScreen = ({
   isLoading,
   progressText
 }) => {
+  const searchTextToDisplay = searchText ? `You searched: ${searchText}` : ""
+
   return (
     <>
     {
@@ -30,7 +32,8 @@ const IntroScreen = ({
           speed="3"
           color="black"
         ></l-quantum>
-      <Typography style={{marginTop: "40px"}}>{progressText}</Typography>
+        <Typography style={{marginTop: "40px"}}>{progressText}</Typography>
+        <Typography variant="h6" style={{ marginTop: "60px" }}>{searchTextToDisplay}</Typography>
       </Grid>
       : <Grid
         container
