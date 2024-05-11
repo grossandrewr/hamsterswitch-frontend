@@ -14,6 +14,7 @@ import SearchBar from './components/SearchBar/index.jsx';
 import ControlPanel from './components/ControlPanel/index.jsx';
 import TrackInfo from './components/TrackInfo/index.jsx';
 import IntroScreen from './components/IntroScreen/index.jsx';
+import InfoDialog from './components/InfoDialog/index.js';
 
 quantum.register()
 
@@ -43,6 +44,8 @@ function WebPlayback(props) {
   const [searchText, setSearchText] = useState("")
   const [onIntroScreen, setOnIntroScreen] = useState(true)
   const [progressText, setProgressText] = useState("")
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [dialogAlbum, setDialogAlbum] = useState(undefined)
 
   useEffect(() => {
     if (!document || !document.body) {
@@ -158,6 +161,17 @@ function WebPlayback(props) {
     setSearchString(e.target.value);
   }
 
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false)
+    setDialogAlbum(undefined)
+  }
+
+  const handleSetDialogAlbum = album => {
+    setIsDialogOpen(true)
+    setDialogAlbum(album)
+  }
+
+
   return (
     <Grid style={{ height: "100%", overflowY: "scroll" }}>
       {
@@ -185,6 +199,7 @@ function WebPlayback(props) {
                 albumResults={albumResults}
                 handlePlayAlbum={handlePlayAlbum}
                 progressText={progressText}
+                setDialogAlbum={handleSetDialogAlbum}
               />
             )
             : <MainAlbumImg current_track={current_track} albumArtUrl={albumArtUrl}/>
@@ -216,6 +231,11 @@ function WebPlayback(props) {
           />
         </Grid>
       }
+      <InfoDialog
+        open={isDialogOpen}
+        onClose={handleCloseDialog}
+        selectedAlbum={dialogAlbum}
+      />
     </Grid> 
   )
 }
