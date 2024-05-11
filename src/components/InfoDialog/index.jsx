@@ -4,6 +4,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
+import { ring } from 'ldrs'
+
+ring.register()
+
 const InfoDialog = ({open, onClose, selectedAlbum}) => {
   const albumName = selectedAlbum ? selectedAlbum['name'] : ""
   const artistName = selectedAlbum ? selectedAlbum['artists'][0]['name'] : ""
@@ -19,7 +23,7 @@ const InfoDialog = ({open, onClose, selectedAlbum}) => {
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          {description}
+          {description ? description : "Loading..."}
         </DialogContentText>
       </DialogContent>
     </Dialog>

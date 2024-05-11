@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 
 import { playAlbum, searchForAlbum, getDevices, transferPlayback } from './auth.js'
-import { makeGPTRequest } from './openai.js';
+import { makeGPTSearchRequest, makeGPTDescriptionRequest } from './openai.js';
 
 import { quantum } from 'ldrs'
 
@@ -14,7 +14,7 @@ import SearchBar from './components/SearchBar/index.jsx';
 import ControlPanel from './components/ControlPanel/index.jsx';
 import TrackInfo from './components/TrackInfo/index.jsx';
 import IntroScreen from './components/IntroScreen/index.jsx';
-import InfoDialog from './components/InfoDialog/index.js';
+import InfoDialog from './components/InfoDialog/index.jsx';
 
 quantum.register()
 
@@ -135,26 +135,43 @@ function WebPlayback(props) {
     const stringToSearch = searchString
     setSearchString("")
     cycleProgressText()
-    const constantAlbumsToFind = await handleGptRequest(stringToSearch)
+    const constantAlbumsToFind = await handleGptSearchRequest(stringToSearch)
 
     const results = []
     for (let i = 0; i < 4; i++) {
       const albumName = constantAlbumsToFind[i]['album'];
       const artistName = constantAlbumsToFind[i]['artist'];
-      const albumDescription = constantAlbumsToFind[i]['description'];
       const albumResult = await searchForAlbum(props.token, albumName, artistName);
-      albumResult['gptDescription'] = albumDescription
       results.push(albumResult)
     }
     setAlbumResults(results)
     setOnIntroScreen(false)
     setCurrentScreen(1)
     setIsLoading(false)
+
+    const descriptionRequests = results.map((album, idx) => handleGetAlbumDescription(album, idx));
+    await Promise.all(descriptionRequests);
   }
 
-  const handleGptRequest = async (searchString) => {
-    const response = await makeGPTRequest(searchString);
+  const handleGetAlbumDescription = async (album, idx) => {
+    const searchString = `${album?.name} by ${album.artists[0]?.name}`
+    const description = await handleGptDescriptionRequest(searchString)
+
+    setAlbumResults(prevResults => {
+      const newAlbumResults = [...prevResults];
+      newAlbumResults[idx] = { ...newAlbumResults[idx], gptDescription: description };
+      return newAlbumResults;
+    });
+  }
+
+  const handleGptSearchRequest = async (searchString) => {
+    const response = await makeGPTSearchRequest(searchString);
     return JSON.parse(response.data);
+  }
+  
+  const handleGptDescriptionRequest = async (searchString) => {
+    const response = await makeGPTDescriptionRequest(searchString);
+    return response.data
   }
 
   const handleChangeText = e => {

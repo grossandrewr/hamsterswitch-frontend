@@ -28,8 +28,12 @@ const getAlbumGrid = (albumResults, handlePlayAlbum, setDialogAlbum, selectedAlb
           />
           {selectedAlbum === idx &&
             <>
-              <IconButton style={{ position: "absolute", top: 5, right: 5 }} onClick={() => { setDialogAlbum(album)}}>
-                <InfoTwoToneIcon style={{ fontSize: 40, color: "#FFFF99" }} />
+              <IconButton 
+                style={{ position: "absolute", top: 5, right: 5 }} 
+                onClick={() => { setDialogAlbum(album)}}
+                disabled={!album['gptDescription']}
+              >
+                <InfoTwoToneIcon style={{ fontSize: 40, color: album['gptDescription'] ? "#FFFF99" : "grey" }} />
               </IconButton>
               <IconButton 
                 style={{ position: "absolute", top: 100, right: 100 }} 
