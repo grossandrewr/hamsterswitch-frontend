@@ -190,35 +190,34 @@ function WebPlayback(props) {
   return (
     <Grid style={{ marginTop: "15px", height: "90%", overflowY: "scroll" }}>
       {
-        currentScreen == 0 
-          ? <IntroScreen
-            searchString={searchString}
-            searchText={searchText}
-            handleChangeText={handleChangeText}
-            handleSearchAlbums={handleSearchAlbums}
-            requestRandomAlbums={requestRandomAlbums}
-            isLoading={isLoading}
-            progressText={progressText}
-          />
-        : <Grid 
+        <Grid 
           container 
           direction="column" 
           alignItems="center" 
           justifyContent="flex-start" 
           style={{ width: "100vw", paddingTop: "30px", }}
         >
-          { currentScreen == 2
-            ? (
-              <AlbumsGrid 
-                isLoading={isLoading}
-                albumResults={albumResults}
-                handlePlayAlbum={handlePlayAlbum}
-                progressText={progressText}
-                setDialogAlbum={handleSetDialogAlbum}
-              />
-            )
-            : <MainAlbumImg current_track={current_track} albumArtUrl={albumArtUrl}/>
-          }
+          {
+            currentScreen == 0
+            ? <IntroScreen
+              searchString={searchString}
+              searchText={searchText}
+              handleChangeText={handleChangeText}
+              handleSearchAlbums={handleSearchAlbums}
+              requestRandomAlbums={requestRandomAlbums}
+              isLoading={isLoading}
+              progressText={progressText}
+            />
+            : currentScreen == 1
+            ? <MainAlbumImg current_track={current_track} albumArtUrl={albumArtUrl} />
+            : <AlbumsGrid
+              isLoading={isLoading}
+              albumResults={albumResults}
+              handlePlayAlbum={handlePlayAlbum}
+              progressText={progressText}
+              setDialogAlbum={handleSetDialogAlbum}
+            />
+          }     
           <Grid 
             container 
             direction="column" 
@@ -227,7 +226,9 @@ function WebPlayback(props) {
             style={{ marginBottom: "40px", height: "40px" }}
           >
             {
-              currentScreen == 2
+              currentScreen == 1
+              ? current_track && <TrackInfo current_track={current_track}/>
+              : currentScreen == 2
               ? <SearchBar
                   searchString={searchString}
                   searchText={searchText}
@@ -235,15 +236,19 @@ function WebPlayback(props) {
                   handleSearchAlbums={handleSearchAlbums}
                   requestRandomAlbums={requestRandomAlbums}
                 />
-              : current_track && <TrackInfo current_track={current_track}/>
+              : <></>
             }
           </Grid>
-          <ControlPanel
-            player={player} 
-            is_paused={is_paused} 
-            currentScreen={currentScreen} 
-            setCurrentScreen={setCurrentScreen}
-          />
+          {
+            currentScreen !== 0 && !!albumArtUrl &&
+            <ControlPanel
+              player={player} 
+              is_paused={is_paused} 
+              currentScreen={currentScreen} 
+              setCurrentScreen={setCurrentScreen}
+              albumWasSelected={!!albumArtUrl}
+            />
+          }
         </Grid>
       }
       <InfoDialog
