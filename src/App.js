@@ -9,6 +9,7 @@ import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import HamsterSwitchLogo from './assets/HamsterSwitchLogo.png'
 
 function App() {
   const clientId = process.env.REACT_APP_CLIENT_ID;
@@ -45,12 +46,29 @@ function App() {
       direction="column"
       alignItems="center"
       justifyContent="center"
+      style={{position: "relative"}}
     >
+
       {accessToken 
-        ? <WebPlayback token={accessToken} />
+        ? <>
+          <Grid style={{ position: "absolute", width: "250px", top: 15, left: 15 }}>
+            <img
+              src={HamsterSwitchLogo}
+              alt="HamsterSwitch Logo"
+              width="250px"
+            />
+          </Grid>
+          <WebPlayback token={accessToken} />
+        </>
         : <>
-          <Typography variant="h2" style={{marginBottom: "20px"}}>Albumatrix</Typography>
-          <Button variant="outlined" style={{borderRadius: "100px", padding: "12px 20px"}} onClick={() => redirectToAuthCodeFlow(clientId)}>
+          <Grid>
+            <img
+              src={HamsterSwitchLogo}
+              alt="HamsterSwitch Logo"
+              width="400px"
+            />
+          </Grid>
+          <Button variant="outlined" style={{borderRadius: "100px", padding: "12px 20px", marginTop: "20px"}} onClick={() => redirectToAuthCodeFlow(clientId)}>
             <Typography>Login to Spotify</Typography>
           </Button>
         </>

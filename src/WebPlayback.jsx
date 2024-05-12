@@ -190,7 +190,7 @@ function WebPlayback(props) {
 
 
   return (
-    <Grid style={{ height: "100%", overflowY: "scroll" }}>
+    <Grid style={{ marginTop: "15px", height: "90%", overflowY: "scroll" }}>
       {
         onIntroScreen
           ? <IntroScreen
@@ -207,7 +207,7 @@ function WebPlayback(props) {
           direction="column" 
           alignItems="center" 
           justifyContent="flex-start" 
-          style={{ height: "100vh", width: "100vw", paddingTop: "30px", }}
+          style={{ width: "100vw", paddingTop: "30px", }}
         >
           { currentScreen == 1 
             ? (
