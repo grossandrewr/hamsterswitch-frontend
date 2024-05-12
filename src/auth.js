@@ -9,7 +9,7 @@ export async function redirectToAuthCodeFlow(clientId) {
     params.append("client_id", clientId);
     params.append("response_type", "code");
     params.append("redirect_uri", `${frontendUrl}/callback`);
-    params.append("scope", "streaming user-read-private user-read-email user-read-currently-playing user-read-playback-state user-modify-playback-state app-remote-control");
+    params.append("scope", "streaming user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing");
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
 
