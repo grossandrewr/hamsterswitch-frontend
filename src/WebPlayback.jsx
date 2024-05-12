@@ -37,12 +37,11 @@ function WebPlayback(props) {
   const [current_track, setTrack] = useState(track);
   const [albumArtUrl, setAlbumArtUrl] = useState("");
   const [albumResults, setAlbumResults] = useState([]);
-  const [currentScreen, setCurrentScreen] = useState(1);
+  const [currentScreen, setCurrentScreen] = useState(0);
   const [searchString, setSearchString] = useState("")
   const [deviceId, setDeviceId] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [searchText, setSearchText] = useState("")
-  const [onIntroScreen, setOnIntroScreen] = useState(true)
   const [progressText, setProgressText] = useState("")
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [dialogAlbum, setDialogAlbum] = useState(undefined)
@@ -126,7 +125,7 @@ function WebPlayback(props) {
     await playAlbum(props.token, `spotify:album:${album.id}`)
     const albumArtUrl = album.images[0].url
     setAlbumArtUrl(albumArtUrl)
-    setCurrentScreen(0)
+    setCurrentScreen(1)
   }
 
   const handleSearchAlbums = async (searchString) => {
@@ -145,8 +144,7 @@ function WebPlayback(props) {
       results.push(albumResult)
     }
     setAlbumResults(results)
-    setOnIntroScreen(false)
-    setCurrentScreen(1)
+    setCurrentScreen(2)
     setIsLoading(false)
 
     const descriptionRequests = results.map((album, idx) => handleGetAlbumDescription(album, idx));
@@ -192,7 +190,7 @@ function WebPlayback(props) {
   return (
     <Grid style={{ marginTop: "15px", height: "90%", overflowY: "scroll" }}>
       {
-        onIntroScreen
+        currentScreen == 0 
           ? <IntroScreen
             searchString={searchString}
             searchText={searchText}
@@ -209,7 +207,7 @@ function WebPlayback(props) {
           justifyContent="flex-start" 
           style={{ width: "100vw", paddingTop: "30px", }}
         >
-          { currentScreen == 1 
+          { currentScreen == 2
             ? (
               <AlbumsGrid 
                 isLoading={isLoading}
@@ -229,7 +227,7 @@ function WebPlayback(props) {
             style={{ marginBottom: "40px", height: "40px" }}
           >
             {
-              currentScreen == 1 
+              currentScreen == 2
               ? <SearchBar
                   searchString={searchString}
                   searchText={searchText}

@@ -23,10 +23,10 @@ const Navbar = ({ currentScreen, setCurrentScreen }) => {
       }}
     >
       <IconButton
-        onClick={() => setCurrentScreen(0)}
+        onClick={() => setCurrentScreen(1)}
         style={{
           marginRight: "10px",
-          color: currentScreen === 0 ? '#FFA500' : "grey",
+          color: currentScreen === 1 ? '#FFA500' : "grey",
         }}
       >
         <AlbumIcon
@@ -34,9 +34,9 @@ const Navbar = ({ currentScreen, setCurrentScreen }) => {
         />
       </IconButton>
       <IconButton
-        onClick={() => setCurrentScreen(1)}
+        onClick={() => setCurrentScreen(2)}
         style={{
-          color: currentScreen === 1 ? '#FFA500' : "grey",
+          color: currentScreen === 2 ? '#FFA500' : "grey",
         }}
       >
         <SearchIcon

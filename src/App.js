@@ -51,11 +51,11 @@ function App() {
 
       {accessToken 
         ? <>
-          <Grid style={{ position: "absolute", width: "250px", top: 15, left: 15 }}>
+          <Grid style={{ position: "absolute", top: 15, left: 20 }}>
             <img
               src={HamsterSwitchLogo}
               alt="HamsterSwitch Logo"
-              width="250px"
+              width="220px"
             />
           </Grid>
           <WebPlayback token={accessToken} />
