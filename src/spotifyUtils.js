@@ -1,4 +1,4 @@
-export async function redirectToAuthCodeFlow(clientId) {
+  export async function redirectToAuthCodeFlow(clientId) {
     const verifier = generateCodeVerifier(128);
     const challenge = await generateCodeChallenge(verifier);
     const frontendUrl = process.env.REACT_APP_FRONTEND_URL;
