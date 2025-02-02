@@ -11,6 +11,7 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import HamsterSwitchLogo from './assets/HamsterSwitchLogo.png'
 
+
 function App() {
   const clientId = process.env.REACT_APP_CLIENT_ID;
   const params = new URLSearchParams(window.location.search);
@@ -19,23 +20,19 @@ function App() {
   const [profile, setProfile] = useState(null);
   const [accessToken, setAccessToken] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const accessToken = await getAccessToken(clientId, code);
-      if (accessToken) {
-        setAccessToken(accessToken)
-      }
-      const profileData = await fetchProfile(accessToken);
-      if (profileData && profileData.email) {
-        setProfile(profileData);
-      }
-    }
+  const fetchData = async (clientId, code) => {
+    const accessToken = await getAccessToken(clientId, code);
+    if (accessToken) setAccessToken(accessToken);
 
-    if (profile && profile.email) {
-      return;
-    } else {
-      fetchData();
+    const profileData = await fetchProfile(accessToken);
+    if (profileData && profileData.email) {
+      setProfile(profileData);
     }
+  }
+
+  useEffect(() => {
+    if (profile && profile.email) return;
+    fetchData(clientId, code);
   }, [clientId, code]);
   
   return (
@@ -48,7 +45,6 @@ function App() {
       justifyContent="center"
       style={{position: "relative"}}
     >
-
       {accessToken 
         ? <>
           <Grid style={{ position: "absolute", top: 15, left: 20 }}>
@@ -68,7 +64,11 @@ function App() {
               width="400px"
             />
           </Grid>
-          <Button variant="outlined" style={{borderRadius: "100px", padding: "12px 20px", marginTop: "20px"}} onClick={() => redirectToAuthCodeFlow(clientId)}>
+          <Button 
+            variant="outlined" 
+            style={{borderRadius: "100px", padding: "12px 20px", marginTop: "20px"}} 
+            onClick={() => redirectToAuthCodeFlow(clientId)}
+          >
             <Typography>Login to Spotify</Typography>
           </Button>
         </>

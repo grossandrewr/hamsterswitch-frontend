@@ -3,6 +3,7 @@ import Grid from '@mui/material/Grid';
 
 import { playAlbum, searchForAlbum, getDevices, transferPlayback } from './auth.js'
 import { makeGPTSearchRequest, makeGPTDescriptionRequest } from './openai.js';
+import { deviceName } from './constants.js'
 
 import { quantum } from 'ldrs'
 
@@ -46,47 +47,47 @@ function WebPlayback(props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [dialogAlbum, setDialogAlbum] = useState(undefined)
 
+  const configurePlayer = () => {
+    const player = new window.Spotify.Player({
+      name: deviceName,
+      getOAuthToken: cb => { cb(props.token); },
+      volume: 0.5
+    });
+    setPlayer(player);
+
+    player.addListener('ready', ({ device_id }) => {
+      console.log('Ready with Device ID', device_id);
+    });
+
+    player.addListener('not_ready', ({ device_id }) => {
+      console.log('Device ID has gone offline', device_id);
+    });
+
+    player.addListener('player_state_changed', (state => {
+      if (!state) {
+        return;
+      }
+
+      setTrack(state.track_window.current_track);
+      setPaused(state.paused);
+
+      player.getCurrentState().then(state => {
+        (!state) ? setActive(false) : setActive(true)
+      });
+    }));
+
+    player.connect();
+  }
+
   useEffect(() => {
-    if (!document || !document.body) {
-      return;
-    } 
+    if (!document || !document.body) return;
 
     const script = document.createElement("script");
     script.src = "https://sdk.scdn.co/spotify-player.js";
     script.async = true;
     document && document.body && document.body.appendChild(script);
 
-    window.onSpotifyWebPlaybackSDKReady = () => {
-      const player = new window.Spotify.Player({
-        name: 'Web Playback SDK',
-        getOAuthToken: cb => { cb(props.token); },
-        volume: 0.5
-      });
-      setPlayer(player);
-
-      player.addListener('ready', ({ device_id }) => {
-        console.log('Ready with Device ID', device_id);
-      });
-
-      player.addListener('not_ready', ({ device_id }) => {
-        console.log('Device ID has gone offline', device_id);
-      });
-
-      player.addListener('player_state_changed', (state => {
-        if (!state) {
-          return;
-        }
-
-        setTrack(state.track_window.current_track);
-        setPaused(state.paused);
-
-        player.getCurrentState().then(state => {
-          (!state) ? setActive(false) : setActive(true)
-        });
-      }));
-
-      player.connect();
-    };
+    window.onSpotifyWebPlaybackSDKReady = configurePlayer;
   }, []);
     
   useEffect(() => {
@@ -94,7 +95,7 @@ function WebPlayback(props) {
       const { devices } = await getDevices(props.token)
       for (let i=0; i < devices.length; i++) {
         let device = devices[i]
-        if (device.name == "Web Playback SDK") {
+        if (device.name === deviceName) {
           setDeviceId(device.id)
           transferPlayback(props.token, device.id)
         }
@@ -104,15 +105,15 @@ function WebPlayback(props) {
   }, [])
 
   const cycleProgressText = () => {
-    const string1 = "Analyzing your query... "
-    const string2 = "Running the algorithm... "
-    const string3 = "Processing albums..."
-    const string4 = "Almost ready... "
-
-    setTimeout(() => setProgressText(string1), 0)
-    setTimeout(() => setProgressText(string2), 1000)
-    setTimeout(() => setProgressText(string3), 3750)
-    setTimeout(() => setProgressText(string4), 6500)
+    const stringTimingMap = [
+      ["Analyzing your query... ", 0],
+      ["Running the algorithm... ", 1000],
+      ["Processing albums...", 3750],
+      ["Almost ready... ", 6500]
+    ]
+    stringTimingMap.forEach(([text, time]) => {
+      setTimeout(() => setProgressText(text), time)
+    })
   }
 
   const requestRandomAlbums = async () => {
@@ -131,18 +132,16 @@ function WebPlayback(props) {
   const handleSearchAlbums = async (searchString) => {
     setIsLoading(true)
     setSearchText(searchString)
-    const stringToSearch = searchString
-    setSearchString("")
     cycleProgressText()
-    const constantAlbumsToFind = await handleGptSearchRequest(stringToSearch)
+    const constantAlbumsToFind = await makeGPTSearchRequest(searchString)
+    setSearchString("")
 
-    const results = []
-    for (let i = 0; i < 4; i++) {
-      const albumName = constantAlbumsToFind[i]['album'];
-      const artistName = constantAlbumsToFind[i]['artist'];
-      const albumResult = await searchForAlbum(props.token, albumName, artistName);
-      results.push(albumResult)
-    }
+    const results = await Promise.all(
+      constantAlbumsToFind.slice(0, 4).map(({ album, artist }) =>
+        searchForAlbum(props.token, album, artist)
+      )
+    );
+
     setAlbumResults(results)
     setCurrentScreen(2)
     setIsLoading(false)
@@ -153,23 +152,13 @@ function WebPlayback(props) {
 
   const handleGetAlbumDescription = async (album, idx) => {
     const searchString = `${album?.name} by ${album.artists[0]?.name}`
-    const description = await handleGptDescriptionRequest(searchString)
+    const description = await makeGPTDescriptionRequest(searchString)
 
     setAlbumResults(prevResults => {
       const newAlbumResults = [...prevResults];
       newAlbumResults[idx] = { ...newAlbumResults[idx], gptDescription: description };
       return newAlbumResults;
     });
-  }
-
-  const handleGptSearchRequest = async (searchString) => {
-    const response = await makeGPTSearchRequest(searchString);
-    return JSON.parse(response.data);
-  }
-  
-  const handleGptDescriptionRequest = async (searchString) => {
-    const response = await makeGPTDescriptionRequest(searchString);
-    return response.data
   }
 
   const handleChangeText = e => {
@@ -198,7 +187,7 @@ function WebPlayback(props) {
           style={{ width: "100vw", paddingTop: "30px", }}
         >
           {
-            currentScreen == 0
+            currentScreen === 0
             ? <IntroScreen
               searchString={searchString}
               searchText={searchText}
@@ -208,7 +197,7 @@ function WebPlayback(props) {
               isLoading={isLoading}
               progressText={progressText}
             />
-            : currentScreen == 1
+            : currentScreen === 1
             ? <MainAlbumImg current_track={current_track} albumArtUrl={albumArtUrl} />
             : <AlbumsGrid
               isLoading={isLoading}
@@ -226,9 +215,9 @@ function WebPlayback(props) {
             style={{ marginBottom: "40px", height: "40px" }}
           >
             {
-              currentScreen == 1
+              currentScreen === 1
               ? current_track && <TrackInfo current_track={current_track}/>
-              : currentScreen == 2
+              : currentScreen === 2
               ? <SearchBar
                   searchString={searchString}
                   searchText={searchText}

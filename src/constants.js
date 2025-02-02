@@ -1,3 +1,5 @@
+export const deviceName = "Hamster Switch Player";
+
 export const genres = [
     // Alternative
     "Alternative",
