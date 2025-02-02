@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 
-import { playAlbum, searchForAlbum, getDevices, transferPlayback } from './auth.js'
+import { playAlbum, searchForAlbum, getDevices, transferPlayback } from './spotifyUtils.js'
 import { makeGPTSearchRequest, makeGPTDescriptionRequest } from './openai.js';
 import { deviceName } from './constants.js'
+import { cycleProgressText } from './utils.js';
 
 import { quantum } from 'ldrs'
 
@@ -40,12 +41,35 @@ function WebPlayback(props) {
   const [albumResults, setAlbumResults] = useState([]);
   const [currentScreen, setCurrentScreen] = useState(0);
   const [searchString, setSearchString] = useState("")
-  const [deviceId, setDeviceId] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [searchText, setSearchText] = useState("")
   const [progressText, setProgressText] = useState("")
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [dialogAlbum, setDialogAlbum] = useState(undefined)
+
+  useEffect(() => {
+    if (!document || !document.body) return;
+
+    const script = document.createElement("script");
+    script.src = "https://sdk.scdn.co/spotify-player.js";
+    script.async = true;
+    document && document.body && document.body.appendChild(script);
+
+    window.onSpotifyWebPlaybackSDKReady = configurePlayer;
+  }, []);
+    
+  useEffect(() => {
+    const handleTransferPlayback = async () => {
+      const { devices } = await getDevices(props.token)
+      for (let i=0; i < devices.length; i++) {
+        let device = devices[i]
+        if (device.name === deviceName) {
+          transferPlayback(props.token, device.id)
+        }
+      }
+    }
+    setTimeout(handleTransferPlayback, 3000)
+  }, [])
 
   const configurePlayer = () => {
     const player = new window.Spotify.Player({
@@ -79,49 +103,6 @@ function WebPlayback(props) {
     player.connect();
   }
 
-  useEffect(() => {
-    if (!document || !document.body) return;
-
-    const script = document.createElement("script");
-    script.src = "https://sdk.scdn.co/spotify-player.js";
-    script.async = true;
-    document && document.body && document.body.appendChild(script);
-
-    window.onSpotifyWebPlaybackSDKReady = configurePlayer;
-  }, []);
-    
-  useEffect(() => {
-    const handleTransferPlayback = async () => {
-      const { devices } = await getDevices(props.token)
-      for (let i=0; i < devices.length; i++) {
-        let device = devices[i]
-        if (device.name === deviceName) {
-          setDeviceId(device.id)
-          transferPlayback(props.token, device.id)
-        }
-      }
-    }
-    setTimeout(handleTransferPlayback, 3000)
-  }, [])
-
-  const cycleProgressText = () => {
-    const stringTimingMap = [
-      ["Analyzing your query... ", 0],
-      ["Running the algorithm... ", 1000],
-      ["Processing albums...", 3750],
-      ["Almost ready... ", 6500]
-    ]
-    stringTimingMap.forEach(([text, time]) => {
-      setTimeout(() => setProgressText(text), time)
-    })
-  }
-
-  const requestRandomAlbums = async () => {
-    const randomIndex = Math.floor(Math.random() * genres.length);
-    const randomGenre = genres[randomIndex];
-    handleSearchAlbums(`albums from the genre ${randomGenre}`)
-  }
-
   const handlePlayAlbum = async (album) => {
     await playAlbum(props.token, `spotify:album:${album.id}`)
     const albumArtUrl = album.images[0].url
@@ -132,12 +113,13 @@ function WebPlayback(props) {
   const handleSearchAlbums = async (searchString) => {
     setIsLoading(true)
     setSearchText(searchString)
-    cycleProgressText()
-    const constantAlbumsToFind = await makeGPTSearchRequest(searchString)
+    cycleProgressText(setProgressText)
+
+    const albumsToFind = await makeGPTSearchRequest(searchString)
     setSearchString("")
 
     const results = await Promise.all(
-      constantAlbumsToFind.slice(0, 4).map(({ album, artist }) =>
+      albumsToFind.slice(0, 4).map(({ album, artist }) =>
         searchForAlbum(props.token, album, artist)
       )
     );
@@ -175,7 +157,12 @@ function WebPlayback(props) {
     setDialogAlbum(album)
   }
 
-
+  const requestRandomAlbums = async () => {
+    const randomIndex = Math.floor(Math.random() * genres.length);
+    const randomGenre = genres[randomIndex];
+    handleSearchAlbums(`albums from the genre ${randomGenre}`)
+  }
+  
   return (
     <Grid style={{ marginTop: "15px", height: "90%", overflowY: "scroll" }}>
       {
