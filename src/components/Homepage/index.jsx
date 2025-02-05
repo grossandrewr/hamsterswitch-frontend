@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Grid from '@mui/material/Grid';
 
-import { playAlbum, searchForAlbum, getDevices, transferPlayback } from '../../utils/spotifyUtils.js'
+import { playAlbum, searchForAlbum } from '../../utils/spotifyUtils.js'
 import { makeGPTSearchRequest, makeGPTDescriptionRequest } from '../../utils/openai.js';
 import { cycleProgressText } from '../../utils/utils.js';
-import { deviceName } from '../../constants.js'
+import { useSpotifyPlayer } from '../../utils/useSpotifyPlayer.js';
 
 import { quantum } from 'ldrs'
 
@@ -20,23 +20,7 @@ import InfoDialog from '../InfoDialog/index.jsx';
 
 quantum.register()
 
-const track = {
-  name: "",
-  album: {
-    images: [
-      { url: "" }
-    ]
-  },
-  artists: [
-    { name: "" }
-  ]
-}
-
 function Homepage(props) {
-  const [player, setPlayer] = useState(undefined);
-  const [is_paused, setPaused] = useState(false);
-  const [is_active, setActive] = useState(false);
-  const [current_track, setTrack] = useState(track);
   const [albumArtUrl, setAlbumArtUrl] = useState("");
   const [albumResults, setAlbumResults] = useState([]);
   const [currentScreen, setCurrentScreen] = useState(0);
@@ -47,61 +31,7 @@ function Homepage(props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [dialogAlbum, setDialogAlbum] = useState(undefined)
 
-  useEffect(() => {
-    if (!document || !document.body) return;
-
-    const script = document.createElement("script");
-    script.src = "https://sdk.scdn.co/spotify-player.js";
-    script.async = true;
-    document && document.body && document.body.appendChild(script);
-
-    window.onSpotifyWebPlaybackSDKReady = configurePlayer;
-  }, []);
-    
-  useEffect(() => {
-    const handleTransferPlayback = async () => {
-      const { devices } = await getDevices(props.token)
-      for (let i=0; i < devices.length; i++) {
-        let device = devices[i]
-        if (device.name === deviceName) {
-          transferPlayback(props.token, device.id)
-        }
-      }
-    }
-    setTimeout(handleTransferPlayback, 3000)
-  }, [])
-
-  const configurePlayer = () => {
-    const player = new window.Spotify.Player({
-      name: deviceName,
-      getOAuthToken: cb => { cb(props.token); },
-      volume: 0.5
-    });
-    setPlayer(player);
-
-    player.addListener('ready', ({ device_id }) => {
-      console.log('Ready with Device ID', device_id);
-    });
-
-    player.addListener('not_ready', ({ device_id }) => {
-      console.log('Device ID has gone offline', device_id);
-    });
-
-    player.addListener('player_state_changed', (state => {
-      if (!state) {
-        return;
-      }
-
-      setTrack(state.track_window.current_track);
-      setPaused(state.paused);
-
-      player.getCurrentState().then(state => {
-        (!state) ? setActive(false) : setActive(true)
-      });
-    }));
-
-    player.connect();
-  }
+  const { player, is_paused, current_track } = useSpotifyPlayer(props.token);
 
   const handlePlayAlbum = async (album) => {
     await playAlbum(props.token, `spotify:album:${album.id}`)
