@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import Grid from '@mui/material/Grid';
 
-import { playAlbum, searchForAlbum } from '../../utils/spotifyApi.js'
-import { makeGPTSearchRequest, makeGPTDescriptionRequest } from '../../utils/openAIApi.js';
-import { cycleProgressText } from '../../utils/utils.js';
+import { playAlbum } from '../../utils/spotifyApi.js'
+import { makeGPTDescriptionRequest } from '../../utils/openAIApi.js';
+import { cycleProgressText, processAlbumsSearch, requestRandomAlbums } from '../../utils/utils.js';
 import { useSpotifyPlayer } from '../../utils/useSpotifyPlayer.js';
 
 import { quantum } from 'ldrs'
-
-import { genres } from '../../constants.js'
 
 import AlbumsGrid from '../AlbumGrid/index.jsx';
 import MainAlbumImg from '../MainAlbumImg/index.jsx';
@@ -45,14 +43,7 @@ function Homepage(props) {
     setSearchText(searchString)
     cycleProgressText(setProgressText)
 
-    const albumsToFind = await makeGPTSearchRequest(searchString)
-    setSearchString("")
-
-    const results = await Promise.all(
-      albumsToFind.slice(0, 4).map(({ album, artist }) =>
-        searchForAlbum(props.token, album, artist)
-      )
-    );
+    const results = await processAlbumsSearch(searchString, props.token)
 
     setAlbumResults(results)
     setCurrentScreen(2)
@@ -85,12 +76,6 @@ function Homepage(props) {
   const handleSetDialogAlbum = album => {
     setIsDialogOpen(true)
     setDialogAlbum(album)
-  }
-
-  const requestRandomAlbums = async () => {
-    const randomIndex = Math.floor(Math.random() * genres.length);
-    const randomGenre = genres[randomIndex];
-    handleSearchAlbums(`albums from the genre ${randomGenre}`)
   }
   
   return (
