@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 
-import { playAlbum, searchForAlbum, getDevices, transferPlayback } from './spotifyUtils.js'
-import { makeGPTSearchRequest, makeGPTDescriptionRequest } from './openai.js';
-import { deviceName } from './constants.js'
-import { cycleProgressText } from './utils.js';
+import { playAlbum, searchForAlbum, getDevices, transferPlayback } from '../../spotifyUtils.js'
+import { makeGPTSearchRequest, makeGPTDescriptionRequest } from '../../openai.js';
+import { deviceName } from '../../constants.js'
+import { cycleProgressText } from '../../utils.js';
 
 import { quantum } from 'ldrs'
 
-import { genres } from './constants.js'
+import { genres } from '../../constants.js'
 
-import AlbumsGrid from './components/AlbumGrid/index.jsx';
-import MainAlbumImg from './components/MainAlbumImg/index.jsx';
-import SearchBar from './components/SearchBar/index.jsx';
-import ControlPanel from './components/ControlPanel/index.jsx';
-import TrackInfo from './components/TrackInfo/index.jsx';
-import IntroScreen from './components/IntroScreen/index.jsx';
-import InfoDialog from './components/InfoDialog/index.jsx';
+import AlbumsGrid from '../AlbumGrid/index.jsx';
+import MainAlbumImg from '../MainAlbumImg/index.jsx';
+import SearchBar from '../SearchBar/index.jsx';
+import ControlPanel from '../ControlPanel/index.jsx';
+import TrackInfo from '../TrackInfo/index.jsx';
+import IntroScreen from '../IntroScreen/index.jsx';
+import InfoDialog from '../InfoDialog/index.jsx';
 
 quantum.register()
 
@@ -32,7 +32,7 @@ const track = {
   ]
 }
 
-function WebPlayback(props) {
+function Homepage(props) {
   const [player, setPlayer] = useState(undefined);
   const [is_paused, setPaused] = useState(false);
   const [is_active, setActive] = useState(false);
@@ -236,4 +236,4 @@ function WebPlayback(props) {
   )
 }
 
-export default WebPlayback
+export default Homepage

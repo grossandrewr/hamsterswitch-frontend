@@ -4,7 +4,7 @@ import {
   getAccessToken,
   fetchProfile,
  } from './spotifyUtils.js'  
-import WebPlayback from './WebPlayback'
+import Homepage from './components/Homepage/index.jsx'
 import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
@@ -54,7 +54,7 @@ function App() {
               width="220px"
             />
           </Grid>
-          <WebPlayback token={accessToken} />
+          <Homepage token={accessToken} />
         </>
         : <>
           <Grid>
