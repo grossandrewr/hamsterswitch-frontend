@@ -9,3 +9,4 @@
     setTimeout(() => setProgressText(text), time)
   })
 }
+

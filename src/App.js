@@ -3,7 +3,7 @@ import {
   redirectToAuthCodeFlow,
   getAccessToken,
   fetchProfile,
- } from './utils/spotifyUtils.js'  
+ } from './utils/spotifyApi.js'  
 import Homepage from './components/Homepage/index.jsx'
 import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';

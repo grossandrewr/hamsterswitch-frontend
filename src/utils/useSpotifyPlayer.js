@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getDevices, transferPlayback } from './spotifyUtils';
+import { getDevices, transferPlayback } from './spotifyApi';
 import { deviceName } from '../constants';
 
 export function useSpotifyPlayer(token) {

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import Grid from '@mui/material/Grid';
 
-import { playAlbum, searchForAlbum } from '../../utils/spotifyUtils.js'
-import { makeGPTSearchRequest, makeGPTDescriptionRequest } from '../../utils/openai.js';
+import { playAlbum, searchForAlbum } from '../../utils/spotifyApi.js'
+import { makeGPTSearchRequest, makeGPTDescriptionRequest } from '../../utils/openAIApi.js';
 import { cycleProgressText } from '../../utils/utils.js';
 import { useSpotifyPlayer } from '../../utils/useSpotifyPlayer.js';
 
