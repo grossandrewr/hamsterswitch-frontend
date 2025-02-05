@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 
-import { playAlbum, searchForAlbum, getDevices, transferPlayback } from '../../spotifyUtils.js'
-import { makeGPTSearchRequest, makeGPTDescriptionRequest } from '../../openai.js';
+import { playAlbum, searchForAlbum, getDevices, transferPlayback } from '../../utils/spotifyUtils.js'
+import { makeGPTSearchRequest, makeGPTDescriptionRequest } from '../../utils/openai.js';
+import { cycleProgressText } from '../../utils/utils.js';
 import { deviceName } from '../../constants.js'
-import { cycleProgressText } from '../../utils.js';
 
 import { quantum } from 'ldrs'
 
