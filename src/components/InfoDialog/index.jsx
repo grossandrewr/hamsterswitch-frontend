@@ -1,23 +1,20 @@
-import React from 'react';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import React from "react";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
-import { ring } from 'ldrs'
+import { ring } from "ldrs";
 
-ring.register()
+ring.register();
 
-const InfoDialog = ({open, onClose, selectedAlbum}) => {
-  const albumName = selectedAlbum ? selectedAlbum['name'] : ""
-  const artistName = selectedAlbum ? selectedAlbum['artists'][0]['name'] : ""
-  const description = selectedAlbum ? selectedAlbum['gptDescription'] : ""
+const InfoDialog = ({ open, onClose, selectedAlbum }) => {
+  const albumName = selectedAlbum ? selectedAlbum["name"] : "";
+  const artistName = selectedAlbum ? selectedAlbum["artists"][0]["name"] : "";
+  const description = selectedAlbum ? selectedAlbum["gptDescription"] : "";
 
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-    >
+    <Dialog open={open} onClose={onClose}>
       <DialogTitle id="alert-dialog-title">
         {albumName} - {artistName}
       </DialogTitle>
@@ -27,7 +24,7 @@ const InfoDialog = ({open, onClose, selectedAlbum}) => {
         </DialogContentText>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default InfoDialog
+export default InfoDialog;

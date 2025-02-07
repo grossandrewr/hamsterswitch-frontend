@@ -1,16 +1,15 @@
-import './App.css';
-import { 
+import "./App.css";
+import {
   redirectToAuthCodeFlow,
   getAccessToken,
   fetchProfile,
- } from './utils/spotifyApi.js'  
-import Homepage from './components/Homepage/index.jsx'
-import React, { useState, useEffect } from 'react';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import HamsterSwitchLogo from './assets/HamsterSwitchLogo.png'
-
+} from "./utils/spotifyApi.js";
+import Homepage from "./components/Homepage/index.jsx";
+import React, { useState, useEffect } from "react";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import HamsterSwitchLogo from "./assets/HamsterSwitchLogo.png";
 
 function App() {
   const clientId = process.env.REACT_APP_CLIENT_ID;
@@ -28,13 +27,13 @@ function App() {
     if (profileData && profileData.email) {
       setProfile(profileData);
     }
-  }
+  };
 
   useEffect(() => {
     if (profile && profile.email) return;
     fetchData(clientId, code);
   }, [clientId, code]);
-  
+
   return (
     <Grid
       container
@@ -43,10 +42,10 @@ function App() {
       direction="column"
       alignItems="center"
       justifyContent="center"
-      style={{position: "relative"}}
+      style={{ position: "relative" }}
     >
-      {accessToken 
-        ? <>
+      {accessToken ? (
+        <>
           <Grid style={{ position: "absolute", top: 15, left: 20 }}>
             <img
               src={HamsterSwitchLogo}
@@ -56,7 +55,8 @@ function App() {
           </Grid>
           <Homepage token={accessToken} />
         </>
-        : <>
+      ) : (
+        <>
           <Grid>
             <img
               src={HamsterSwitchLogo}
@@ -64,15 +64,19 @@ function App() {
               width="400px"
             />
           </Grid>
-          <Button 
-            variant="outlined" 
-            style={{borderRadius: "100px", padding: "12px 20px", marginTop: "20px"}} 
+          <Button
+            variant="outlined"
+            style={{
+              borderRadius: "100px",
+              padding: "12px 20px",
+              marginTop: "20px",
+            }}
             onClick={() => redirectToAuthCodeFlow(clientId)}
           >
             <Typography>Login to Spotify</Typography>
           </Button>
         </>
-      }
+      )}
     </Grid>
   );
 }
