@@ -6,7 +6,6 @@ import { makeGPTDescriptionRequest } from "../../utils/openAIApi.js";
 import {
   cycleProgressText,
   processAlbumsSearch,
-  requestRandomAlbums,
 } from "../../utils/utils.js";
 import { useSpotifyPlayer } from "../../utils/useSpotifyPlayer.js";
 
@@ -19,6 +18,7 @@ import ControlPanel from "../ControlPanel/index.jsx";
 import TrackInfo from "../TrackInfo/index.jsx";
 import IntroScreen from "../IntroScreen/index.jsx";
 import InfoDialog from "../InfoDialog/index.jsx";
+import { genres } from "../../constants.js";
 
 quantum.register();
 
@@ -78,6 +78,12 @@ function Homepage(props) {
       };
       return newAlbumResults;
     });
+  };
+
+  const requestRandomAlbums = async () => {
+    const randomIndex = Math.floor(Math.random() * genres.length);
+    const randomGenre = genres[randomIndex];
+    handleSearchAlbums(`albums from the genre ${randomGenre}`);
   };
 
   const handleChangeText = (e) => {

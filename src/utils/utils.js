@@ -1,6 +1,5 @@
 import { makeGPTSearchRequest } from "./openAIApi.js";
 import { searchForAlbum } from "./spotifyApi.js";
-import { genres } from "../constants.js";
 
 export const cycleProgressText = (setProgressText) => {
   const stringTimingMap = [
@@ -22,10 +21,4 @@ export const processAlbumsSearch = async (searchString, token) => {
       .map(({ album, artist }) => searchForAlbum(token, album, artist)),
   );
   return results;
-};
-
-export const requestRandomAlbums = async (handleSearchAlbums) => {
-  const randomIndex = Math.floor(Math.random() * genres.length);
-  const randomGenre = genres[randomIndex];
-  handleSearchAlbums(`albums from the genre ${randomGenre}`);
 };
