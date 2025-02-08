@@ -10,8 +10,10 @@ const SearchBar = ({
   handleChangeText,
   handleSearchAlbums,
   requestRandomAlbums,
+  isError,
 }) => {
   const searchTextToDisplay = searchText ? `You searched: ${searchText}` : "";
+  const errorText = "An error occurred. Please try a different search.";
 
   return (
     <Grid direction="column" align="center">
@@ -30,7 +32,9 @@ const SearchBar = ({
           label=""
           value={searchString}
           onChange={handleChangeText}
-          style={{ minWidth: "400px" }}
+          style={{ minWidth: "400px", transform: "translateY(10px)" }}
+          error={isError}
+          helperText={isError ? errorText : "\u00A0"}
           inputProps={{
             style: {
               height: "60px",

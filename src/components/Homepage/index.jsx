@@ -32,6 +32,7 @@ function Homepage(props) {
   const [progressText, setProgressText] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dialogAlbum, setDialogAlbum] = useState(undefined);
+  const [isError, setIsError] = useState(false);
 
   const { player, is_paused, current_track } = useSpotifyPlayer(props.token);
 
@@ -45,18 +46,24 @@ function Homepage(props) {
   const handleSearchAlbums = async (searchString) => {
     setIsLoading(true);
     setSearchText(searchString);
+    setSearchString("");
     cycleProgressText(setProgressText);
 
-    const results = await processAlbumsSearch(searchString, props.token);
+    try {
+      const results = await processAlbumsSearch(searchString, props.token);
+      setAlbumResults(results);
+      setCurrentScreen(2);
+      setIsLoading(false);
 
-    setAlbumResults(results);
-    setCurrentScreen(2);
-    setIsLoading(false);
+      const descriptionRequests = results.map((album, idx) =>
+        handleGetAlbumDescription(album, idx),
+      );
 
-    const descriptionRequests = results.map((album, idx) =>
-      handleGetAlbumDescription(album, idx),
-    );
-    await Promise.all(descriptionRequests);
+      await Promise.all(descriptionRequests);
+    } catch (error) {
+      setIsError(true);
+      setIsLoading(false);
+    }
   };
 
   const handleGetAlbumDescription = async (album, idx) => {
@@ -75,6 +82,7 @@ function Homepage(props) {
 
   const handleChangeText = (e) => {
     setSearchString(e.target.value);
+    setIsError(false);
   };
 
   const handleCloseDialog = () => {
@@ -106,6 +114,7 @@ function Homepage(props) {
               requestRandomAlbums={requestRandomAlbums}
               isLoading={isLoading}
               progressText={progressText}
+              isError={isError}
             />
           ) : currentScreen === 1 ? (
             <MainAlbumImg
@@ -137,6 +146,7 @@ function Homepage(props) {
                 handleChangeText={handleChangeText}
                 handleSearchAlbums={handleSearchAlbums}
                 requestRandomAlbums={requestRandomAlbums}
+                isError={isError}
               />
             ) : (
               <></>

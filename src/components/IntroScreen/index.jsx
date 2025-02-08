@@ -12,6 +12,7 @@ const IntroScreen = ({
   requestRandomAlbums,
   isLoading,
   progressText,
+  isError,
 }) => {
   return (
     <>
@@ -47,6 +48,7 @@ const IntroScreen = ({
             handleChangeText={handleChangeText}
             handleSearchAlbums={handleSearchAlbums}
             requestRandomAlbums={requestRandomAlbums}
+            isError={isError}
           />
         </Grid>
       )}

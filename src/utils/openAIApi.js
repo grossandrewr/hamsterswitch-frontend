@@ -5,6 +5,13 @@ export const makeGPTSearchRequest = async (searchString) => {
   const response = await axios.post(`${backendUrl}/get-albums`, {
     searchString,
   });
+
+  if (response.status !== 200) {
+    throw new Error(
+      `Request failed with status ${response.status}: ${response.statusText}`,
+    );
+  }
+
   return JSON.parse(response.data);
 };
 
