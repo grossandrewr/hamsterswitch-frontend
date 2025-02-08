@@ -19,7 +19,6 @@ const PlayButtons = ({ player, is_paused }) => {
       xs={6}
       style={{
         paddingRight: "24px",
-        minWidth: "300px",
       }}
     >
       <Grid

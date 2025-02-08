@@ -18,7 +18,6 @@ const Navbar = ({ currentScreen, setCurrentScreen }) => {
       style={{
         paddingLeft: "24px",
         borderLeft: "3px solid grey",
-        minWidth: "300px",
       }}
     >
       <IconButton

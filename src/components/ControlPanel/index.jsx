@@ -18,7 +18,8 @@ const ControlPanel = ({
       justifyContent="center"
       style={{
         marginTop: "50px",
-        minWidth: "700px",
+        width: "700px",
+        paddingLeft: "60px",
       }}
     >
       <PlayButtons player={player} is_paused={is_paused} />
