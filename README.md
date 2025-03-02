@@ -2,7 +2,7 @@
 
 ## Overview
 
-Hamster Switch connects Spotify with ChatGPT, providing music recommendations based on free-form text requests. 
+Hamster Switch connects Spotify with ChatGPT, providing music recommendations based on free-form text requests, with the ability to play music directly from the app. 
 
 The goal is to help you actively discover new music outside the bubble of algorithms based on your existing listening habits. The UI centers around album covers to try to capture some of the fun of flipping through a stack of records.
 
