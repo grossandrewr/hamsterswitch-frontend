@@ -1,70 +1,99 @@
-# Getting Started with Create React App
+# Hamster Switch
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
 
-## Available Scripts
+Hamster Switch connects Spotify with ChatGPT, providing music recommendations based on free-form text requests. 
 
-In the project directory, you can run:
+The goal is to help you actively discover new music outside the bubble of algorithms based on your existing listening habits. The UI centers around album covers to try to capture some of the fun of flipping through a stack of records.
 
-### `npm start`
+## 📹 Demo
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+![Screenshot](./src/assets/screenshot_1.png)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+![Screenshot](./src/assets/screenshot_2.png)
 
-### `npm test`
+![Screenshot](./src/assets/screenshot_3.png)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+![Screenshot](./src/assets/screenshot_4.png)
 
-### `npm run build`
+## 📂 Repositories
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+This project is split across two repositories:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **Frontend**: [hamsterswitch-frontend](https://github.com/grossandrewr/hamsterswitch-frontend)
+- **Backend**: [hamsterswitch-api](https://github.com/grossandrewr/hamsterswitch-api)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+> **Note**: You are currently viewing the Frontend repository. 
 
-### `npm run eject`
+## 🛠️ Technologies
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Frontend
+- JavaScript
+- React.js
+- Material UI
+- Spotify Web Playback SDK
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Backend
+- Node.js
+- Express
+- OpenAI API
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 🚀 Installation & Setup
 
-## Learn More
+### Backend Setup
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. Clone the backend repository:
+   ```bash
+   git clone https://github.com/grossandrewr/hamsterswitch-api.git
+   cd hamsterswitch-api
+   ```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-### Code Splitting
+3. Create a `.env` file with required variables:
+   ```
+   OPENAI_API_KEY=your_openai_api_key
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+4. Start the backend:
+   ```bash
+   npm start
+   ```
 
-### Analyzing the Bundle Size
+### Frontend Setup
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+1. Clone the frontend repository:
+   ```bash
+   git clone https://github.com/grossandrewr/hamsterswitch-frontend.git
+   cd hamsterswitch-frontend
+   ```
 
-### Making a Progressive Web App
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+3. Create a `.env` file with required variables:
+   ```
+    REACT_APP_FRONTEND_URL="http://localhost:3000"
+    REACT_APP_BACKEND_URL="http://localhost:8000"
+    REACT_APP_CLIENT_ID=your_client_id
+   ```
 
-### Advanced Configuration
+4. Start the frontend:
+   ```bash
+   npm start
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+5. The app should now be running with the frontend on `localhost:3000` and backend on `localhost:8000`
 
-### Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## 📧 Contact
 
-### `npm run build` fails to minify
+- GitHub: [grossandrewr](https://github.com/grossandrewr)
+- Email: andrewgross.swe@gmail.com
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
